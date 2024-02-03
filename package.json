@@ -1,0 +1,26 @@
+{
+  "name": "cv_generator",
+  "version": "1.0.0",
+  "description": "*",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dereje-boy/cv_generator.git"
+  },
+  "author": "Dere-boy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dereje-boy/cv_generator/issues"
+  },
+  "homepage": "https://github.com/Dereje-boy/cv_generator#readme",
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.0.3"
+  }
+}
