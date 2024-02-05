@@ -2,43 +2,27 @@ const PDFDocument = require('pdfkit');
 const express = require('express');
 const fs = require('fs');
 
+//importing local modules
+const CV = require("./CV");
+const { log } = require('console');
 
 const app = express();
+app.use(express.static("/"))
+
+console.log("welcome to cv generator app....");
+log(CV.create());
+
+
 
 app.get("/", (req, res) => {
-
-    // Create a document
-    const doc = new PDFDocument({ size: 'A4' });
-
-    doc.pipe(fs.createWriteStream('cv.pdf'));
-
-    doc
-        .font('fonts/PalatinoBold.ttf')
-        .fontSize(25)
-        .text('Dereje Gezahegn', 48, 4);
-
-
-    doc.image('C:\\Users\\Dere\\Downloads\\Dereje_3X4_photo-removebg.png', {
-        fit: [45, 45],
-        align: 'center',
-        valign: 'center'
-    });
-
-    doc.image('images\\210x91.png', {
-        fit: [210, 91],
-        align: 'center',
-        valign: 'center'
-    });
-
-
-    // Finalize PDF file
-    doc.end();
-
-    res.send("done");
-
-
+    // res.send("you are at Home");
+    pdfCreator(res);
+    // res.sendFile('./output.pdf');
 })
 
+app.get("/resume", (req, res) => {
+    res.sendFile("resume2.html", { root: __dirname });
+})
 
 function pdfCreator(res) {
 
@@ -96,6 +80,5 @@ function pdfCreator(res) {
     // Finalize PDF file
     doc.end();
 }
-
 
 app.listen(3000, () => console.log("The server started running on port 3k"))
