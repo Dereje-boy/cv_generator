@@ -1,12 +1,39 @@
-const PDFDocument = require('pdfkit');
 const express = require('express');
-const fs = require('fs');
+const body_parser = require("body-parser")
+const handlebars = require("express-handlebars").create({ defaultLayout: 'main' });
+const { MongoClient } = require("mongodb")
 
+//Routes
+const routerBasicInformation = require('./routes/basicInformation');
+const experience = require('./routes/experience');
+const education = require('./routes/education');
+const languages = require('./routes/languages');
+const reference = require('./routes/reference');
+const hobbies = require('./routes/hobbies');
 
 const app = express();
 
-app.get("/", (req, res) => {
+app.engine('handlebars', handlebars.engine)
+app.set('view engine', "handlebars")
+app.use(express.static(__dirname + "/public"))
+app.use(body_parser())
+const tsayishDoc = { firstname: "Tsayish", lastname: "Gezahegn", phoneNumber: "+28589347834", email: "tsayishGezahegn@gmail.com", aboutMe: "Purchaser at hacikon company" };
 
+//Routing
+app.use('/basicInformation', routerBasicInformation);
+app.use('/experience', experience);
+app.use('/education', education);
+app.use('/languages', languages);
+app.use('/reference', reference);
+app.use('/hobbies', hobbies);
+
+app.get("/", (req, res) => {
+    res.render("index");
+})
+app.get("/updated", (req, res) => {
+})
+
+function createCV1() {
     // Create a document
     const doc = new PDFDocument({ size: 'A4' });
 
@@ -14,31 +41,21 @@ app.get("/", (req, res) => {
 
     doc
         .font('fonts/PalatinoBold.ttf')
-        .fontSize(25)
+        .fontSize(factorME(15))
         .text('Dereje Gezahegn', 48, 4);
 
 
     doc.image('C:\\Users\\Dere\\Downloads\\Dereje_3X4_photo-removebg.png', {
-        fit: [45, 45],
-        align: 'center',
-        valign: 'center'
+        fit: [factorME(45), factorME(45)]
     });
 
     doc.image('images\\210x91.png', {
-        fit: [210, 91],
-        align: 'center',
-        valign: 'center'
+        fit: [factorME(210), factorME(91)]
     });
-
-
     // Finalize PDF file
     doc.end();
-
-    res.send("done");
-
-
-})
-
+    // res.send("done");
+}
 
 function pdfCreator(res) {
 
@@ -97,5 +114,18 @@ function pdfCreator(res) {
     doc.end();
 }
 
+createConnection()
+
+async function createConnection() {
+    const client = new MongoClient('mongodb://localhost:27017');
+    const connection = await client.connect();
+    const cvGeneratorDB = connection.db('cvGenerator');
+    const usersCollection = cvGeneratorDB.collection('users');
+    // await cvGeneratorDB.collection('user').drop();
+    // deleting collection which doesnot exist, raises an error
+    const myDoc = { firstname: "Brad", lastname: "Travirsia", phoneNumber: "09898934894", email: "ghioege@gmail.com", aboutMe: "ghieg eiogjeiogj iej geigje iigje gengei gieng ern" };
+    // const insertResult = await usersCollection.insertOne(myDoc);
+    return connection;
+}
 
 app.listen(3000, () => console.log("The server started running on port 3k"))

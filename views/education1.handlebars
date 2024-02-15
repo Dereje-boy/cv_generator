@@ -1,0 +1,38 @@
+<div class="education-container">
+    <h1 class="w-100 text-center text-primary fw-bold text-uppercase p-3">Add Education</h1>
+
+    <div class="">
+
+        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+
+            {{message}}
+
+        </p>
+
+        <form class="container w-50 h-100 d-flex flex-column align-items-center gap-3" method="post" action="education">
+            <div class="form-group w-100">
+                <label for="universityName" class="control-label fs-4">Name of University or College</label>
+                <input type="text" name="universityName" class="form-control fw-bold p-2 fs-3" required
+                    value={{universityName}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="documentTitle" class="control-label fs-4">Document Title of The Graduation</label>
+                <input type="text" name="documentTitle" class="form-control fw-bold p-2 fs-3" required
+                    value={{documentTitle}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="graduationYear" class="control-label fs-4">Year of Graduation</label>
+                <input type="month" name="graduationYear" class="form-control fw-bold p-2 fs-3" required
+                    value={{graduationYear}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="cgpa" class="control-label fs-4 ">CGPA</label>
+                <input type="number" step="0.01" min="2" max="4" name="cgpa" id="about-me"
+                    class="form-control fw-bold p-2 fs-3" required value={{cgpa}} />
+            </div>
+            <div class="form-group w-50">
+                <input type="submit" value="Add Education" class="btn btn-primary align-self-center w-100 fs-3">
+            </div>
+        </form>
+    </div>
+</div>

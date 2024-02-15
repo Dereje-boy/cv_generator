@@ -1,0 +1,99 @@
+<style>
+    .index-container {
+        background-color: #f3f3f3;
+        border-radius: 20px;
+        padding: 20px;
+        height: 100%;
+        min-height: 100vh;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s;
+        width: 300px;
+        height: 400px;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+    }
+</style>
+
+<div class="index-container w-100 my-3 d-flex flex-wrap gap-3 justify-content-center">
+
+    {{!-- personal information --}}
+    <div class="card">
+        <img src="/Images/personal_information.png" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Personal Information</h5>
+            <p class="card-text">Fill all required personal information to get trust easily form employers </p>
+            <a href="basicInformation" class="btn btn-primary">Manage Personal Information</a>
+        </div>
+    </div>
+
+    {{!-- education --}}
+    <div class="card">
+        <img src="/Images/education.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Education</h5>
+            <p class="card-text">With out Education, it is difficult to be appointed for further step. So, Add your
+                Education with grade and where you have accomplished it.</p>
+            <a href="education" class="btn btn-primary">Manage Educations</a>
+        </div>
+    </div>
+
+    {{!-- experience --}}
+    <div class="card">
+        <img src="/Images/experience.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Experience</h5>
+            <p class="card-text">Add your all of your relevant Experiences to be visible to employers.</p>
+            <a href="experience" class="btn btn-primary">Manage Experiences</a>
+        </div>
+    </div>
+
+    {{!-- languages --}}
+    <div class="card">
+        <img src="/Images/languages.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Language</h5>
+            <p class="card-text">Being multiple language speaker has more chance to get job. List all of languages you
+                know with it's level.</p>
+            <a href="languages" class="btn btn-primary">Manage Languages</a>
+        </div>
+    </div>
+
+
+    {{!-- reference --}}
+    <div class="card">
+        <img src="/Images/reference.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">References</h5>
+            <p class="card-text">Always it is better to have reference who knows you very well, to express you in the
+                way that gives you better chance for further assessement</p>
+            <a href="reference" class="btn btn-primary">Manage References</a>
+        </div>
+    </div>
+
+    {{!-- hobbies --}}
+    <div class="card">
+        <img src="/Images/hobbies.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Hobbies</h5>
+            <p class="card-text">Hobbies are optoinal to have on cv or resume. Just add some to let the Hiring Managers
+                knows you more.</p>
+            <a href="hobbies" class="btn btn-primary">Manage Hobbies</a>
+        </div>
+    </div>
+
+</div>

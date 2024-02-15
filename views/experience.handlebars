@@ -1,0 +1,109 @@
+{{!-- exp means experience --}}
+
+<style>
+    .exp-container {
+        border-radius: 10px;
+        min-height: 80vh;
+    }
+</style>
+
+<div class="exp-container w-100 border border-primary p-2 d-flex gap-2">
+
+
+    <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-success fw-bold">Your Added
+            Experiences</h3>
+
+        <div class="one-added-exp card w-100 p-2">
+            <div class="card-header">
+                <h5>Position: Junior Surveyor</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Company: Rama Construction Company</h5>
+                <h5 class="ps-3 card-title">Start Date: October 1, 2022</h5>
+                <h5 class="ps-3 card-title">End Date: May 1, 2023</h5>
+                <h5 class="ps-3 card-title">About The Experience</h5>
+                <h6 class="ps-3 card-text">Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Veritatis cumque vero,
+                    modi, enim corporis numquam culpa
+                    laboriosam sed dicta unde in laudantium
+                    consequatur adipisci velit libero
+                    molestias, porro officiis! Libero</h6>
+                <a href="experience/edit/1" class="btn btn-primary ps-3">Edit Experience</a>
+                <button type="button" class=" btn btn-danger">Delete</button>
+            </div>
+
+        </div>
+        <div class="one-added-exp card w-100 p-2">
+            <div class="card-header">
+                <h5>Position: Trainee Surveyor</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Company: Rama Construction Company</h5>
+                <h5 class="ps-3 card-title">Start Date: October 1, 2022</h5>
+                <h5 class="ps-3 card-title">End Date: May 1, 2023</h5>
+                <h5 class="ps-3 card-title">About The Experience</h5>
+                <h6 class="ps-3 card-text">Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Veritatis cumque vero,
+                    modi, enim corporis numquam culpa
+                    laboriosam sed dicta unde in laudantium
+                    consequatur adipisci velit libero
+                    molestias, porro officiis! Libero</h6>
+                <a href="#" class="btn btn-primary ps-3">Edit Experience</a>
+                <button type="button" class=" btn btn-danger">Delete</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    {{!-- right container --}}
+    <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-warning fw-bold">Add Your New Experience</h3>
+
+
+        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+
+            {{message}}
+
+        </p>
+
+        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post"
+            action="experience">
+            <div class="form-group w-100">
+                <label for="position" class="control-label fs-4">Position *</label>
+                <input type="text" name="position" class="form-control fw-bold p-2 fs-3" required value={{position}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="startDate" class="control-label fs-4">Start Date *</label>
+                <input type="date" name="startDate" class="form-control fw-bold p-2 fs-3" required value={{startDate}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="stillHere" class="control-label fs-4">
+                    Still I work Here
+                    <input id="checkbox" type="checkbox" name="stillHere" class="control-label fs-4">
+                </label>
+
+                <label for="endDate" class="control-label fs-4">End Date
+                    <input id="endDate" type="date" name="endDate" class="form-control fw-bold p-2 fs-3" required
+                        value={{endDate}}>
+                </label>
+            </div>
+            <div class="form-group w-100">
+                <label for="companyName" class="control-label fs-4">Company Name</label>
+                <input type="text" name="companyName" class="form-control fw-bold p-2 fs-3" required value={{email}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="aboutExperience" class="control-label fs-4 ">About The Experience *</label>
+                <textarea name="aboutExperience" id="about-me" rows="5" class="form-control fw-bold p-2 fs-3"
+                    required>{{aboutExperience}}</textarea>
+            </div>
+            <div class="form-group w-50">
+                <input type="submit" value="Add Experience" class="btn btn-primary align-self-center w-100 fs-3">
+            </div>
+        </form>
+
+
+    </div>
+
+</div>

@@ -1,0 +1,68 @@
+{{!-- exp means experience --}}
+<style>
+    .ref-container {
+        border-radius: 10px;
+        min-height: 80vh;
+    }
+</style>
+
+<div class="ref-container w-100 border border-primary p-2 d-flex gap-2">
+
+
+    <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-success fw-bold">Your Added
+            References</h3>
+
+        <div class="one-added-ref card w-100 p-2">
+            <div class="card-header">
+                <h5>Fullname: Abebe Kebede</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Phone: +251989008877</h5>
+                <h5 class="ps-3 card-title">Email: abekabe@gmail.com</h5>
+                <h5 class="ps-3 card-title">Role : </h5>
+                <a href="reference/edit/1" class="btn btn-primary ps-3">Edit Reference</a>
+                <button type="button" class=" btn btn-danger">Delete Reference</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    {{!-- right container --}}
+    <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-warning fw-bold">Add Your New Reference</h3>
+
+
+        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+
+            {{message}}
+
+        </p>
+
+        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="reference">
+            <div class="form-group w-100">
+                <label for="fullname" class="control-label fs-4">Fullname *</label>
+                <input type="text" name="fullname" class="form-control fw-bold p-2 fs-4" required value={{fullname}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="phone" class="control-label fs-4">Phone No. *</label>
+                <input type="tel" name="phone" class="form-control fw-bold p-2 fs-4" required value={{phone}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="email" class="control-label fs-4">Email *</label>
+                <input type="email" name="email" class="form-control fw-bold p-2 fs-4" required value={{email}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="role" class="control-label fs-4">Role *</label>
+                <input type="text" name="role" class="form-control fw-bold p-2 fs-4" required value={{role}}>
+            </div>
+            <div class="form-group w-50">
+                <input type="submit" value="Add Reference" class="btn btn-primary align-self-center w-100 fs-4">
+            </div>
+        </form>
+
+
+    </div>
+
+</div>

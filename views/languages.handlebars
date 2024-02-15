@@ -1,0 +1,67 @@
+{{!-- exp means experience --}}
+<style>
+    .lang-container {
+        border-radius: 10px;
+        min-height: 80vh;
+    }
+</style>
+
+<div class="lang-container w-100 border border-primary p-2 d-flex gap-2">
+
+
+    <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-success fw-bold">Your Added
+            Languages</h3>
+
+        <div class="one-added-lang card w-100 p-2">
+            <div class="card-header">
+                <h5>Amharic</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Level : Native</h5>
+                <a href="experience/edit/1" class="btn btn-primary ps-3">Edit Language</a>
+                <button type="button" class=" btn btn-danger">Delete Language</button>
+            </div>
+        </div>
+        <div class="one-added-lang card w-100 p-2">
+            <div class="card-header">
+                <h5>English</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Level : Fluent</h5>
+                <a href="experience/edit/1" class="btn btn-primary ps-3">Edit Language</a>
+                <button type="button" class=" btn btn-danger">Delete Language</button>
+            </div>
+        </div>
+
+    </div>
+
+    {{!-- right container --}}
+    <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-warning fw-bold">Add Your New Language Skill</h3>
+
+
+        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+
+            {{message}}
+
+        </p>
+
+        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="languages">
+            <div class="form-group w-100">
+                <label for="language" class="control-label fs-4">Language *</label>
+                <input type="text" name="language" class="form-control fw-bold p-2 fs-3" required value={{language}}>
+            </div>
+            <div class="form-group w-100">
+                <label for="level" class="control-label fs-4">Level *</label>
+                <input type="text" name="level" class="form-control fw-bold p-2 fs-3" required value={{level}}>
+            </div>
+            <div class="form-group w-50">
+                <input type="submit" value="Add Language" class="btn btn-primary align-self-center w-100 fs-3">
+            </div>
+        </form>
+
+
+    </div>
+
+</div>
