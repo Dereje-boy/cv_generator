@@ -14,25 +14,70 @@
 <style>
     body {
         padding: 10px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-    #home,
-    #logout {
+    #home {
         transition-property: padding;
         transition-duration: .5s;
 
     }
 
-    #home:hover,
-    #logout:hover {
+    #home:hover {
         padding-left: 30px;
         padding-right: 30px;
+    }
+
+    .dialog-container {
+        position: fixed;
+        width: 40vw;
+        min-height: 60%;
+        padding: 50px;
+        top: -80%;
+        left: 30vw;
+        margin-left: auto;
+        z-index: 5;
+        border-radius: 30px;
+        background-color: white;
+        transition-property: top, left, z-index;
+        transition-duration: .5s;
+        transition-timing-function: ease-in-out;
+    }
+
+    .close-container h4 {
+        border-radius: 10px;
+        padding: 5px 20px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .dialog-container {
+            width: 90vw;
+            left: 5vw;
+            padding: 20px;
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+        .dialog-container {
+            width: 60vw;
+            left: 20vw;
+        }
+    }
+
+    @media screen and (min-width: 992px) {
+        .dialog-container {
+            width: 60vw;
+            left: 20vw;
+        }
     }
 </style>
 
 <body>
-    <header style="width: 100%; height: 100px; border-radius: 10px;"
-        class="bg-primary d-flex justify-content-start align-items-center px-5 w-100">
+    <header style="width: 100%; min-height: 100px; border-radius: 10px;"
+        class="bg-primary flex-wrap d-flex justify-content-start align-items-center px-5 w-100">
         <a id="home" href="/" class="d-flex text-white text-decoration-none align-items-center gap-3">
             <img src="/images/SPRK_default_preset_name_custom – 1.png" alt="CV Generator Logo" height="60px">
             <h4 class=""> CV<h6>Generator</h6>
@@ -40,7 +85,7 @@
         </a>
 
         <div class="center ms-auto d-flex gap-3 px-3">
-            <a href="/showDesign" class="d-flex text-white text-decoration-none align-items-center ms-auto h-100">
+            <a href="showDesigns" class="d-flex text-white text-decoration-none align-items-center ms-auto h-100">
                 <h6>Show Designs</h6>
             </a>
             <a href="/showDesign" class="d-flex text-white text-decoration-none align-items-center ms-auto h-100">
@@ -49,12 +94,56 @@
 
         </div>
 
+        <button id="login" class="btn d-flex text-white text-decoration-none align-items-center h-100">
+            <h6>Login</h6>
+        </button>
 
-        <a href="/Logout" class="d-flex text-white text-decoration-none align-items-center h-100">
-            <h6>Logout</h6>
-        </a>
+        <form
+            class="dialog-container d-flex flex-column justify-content-between align-items-center border border-2 border-primary "
+            method="post" action="/login" id="form">
+
+            {{!-- Header container with login text and close button --}}
+            <div class="close-container w-100 d-flex justify-content-center">
+                <h1 class="text-center grow-5 text-primary">Login</h1>
+                <h4 id="close-button"
+                    class="btn btn-danger ms-auto border border-2 text-center d-flex align-items-center justify-content-center">
+                    X</h4>
+            </div>
+
+            {{!-- Message container --}}
+            <div class="message-container w-75 d-flex justify-content-center align-items center ">
+                <h5 class="text-primary text-center"> Please Enter your email and password to enter dashboard </h5>
+            </div>
+
+            {{!-- Email container --}}
+            <div class="email-container w-75">
+                <label for="email" class="form-label fw-bold">Email</label>
+                <input type="text" class="form-control fs-5" name="email" id="email">
+            </div>
+
+            {{!-- Password container --}}
+            <div class="password-container w-75">
+                <label for="password" class="form-label fw-bold">Password</label>
+                <input type="password" class="form-control fs-5" name="password" id="password">
+            </div>
+
+            {{!-- Sign up button container --}}
+            <div class="sign-up-container w-75 d-flex flex-column justify-content-start py-2">
+                <a href="/signup">
+                    Don't you have an existing account?<br>
+                    <strong>Sign up Here</strong></a>
+            </div>
+            </div>
+
+            {{!-- Submit button container --}}
+            <div class="submit-container w-75 d-flex justify-content-center">
+                <input type="submit" value="Submit" class="btn btn-success">
+            </div>
+
+        </form>
 
     </header>
+
     <section class="container">
         {{{body}}}
     </section>
@@ -66,9 +155,11 @@
 
     </footer>
 
-    <script src="/bootstrap/js/bootstrap.min.js">
+    <script src="/script/jQuery.js"></script>
 
-    </script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="/script/index.js"></script>
 
 </body>
 

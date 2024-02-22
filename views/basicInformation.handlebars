@@ -6,15 +6,13 @@
 </style>
 
 <div class=" d-flex flex-wrap ">
-    <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
-
+    <p class="fs-3 text-primary text-wrap text-underline text-center w-100 fw-bold ">
         {{message}}
-
     </p>
 
     <div>
         <h3 class="text-primary fw-bold text-uppercase">Add Your Personal Information</h3>
-        <img src="/Images/personal_information.png" alt="">
+        <img src="/Images/personal_information.png" alt="" class="w-100">
     </div>
 
     <form class="container w-50 h-100 d-flex flex-column align-items-center gap-3" method="post"
@@ -40,8 +38,8 @@
             <input type="city" name="city" class="form-control fw-bold p-2 fs-3" required value={{city}}>
         </div>
         <div class="form-group w-75">
-            <label for="region" class="control-label fs-4">State or Region</label>
-            <input type="region" name="region" class="form-control fw-bold p-2 fs-3" required value={{region}}>
+            <label for="state" class="control-label fs-4">State or Region</label>
+            <input type="text" name="state" class="form-control fw-bold p-2 fs-3" required value={{state}}>
         </div>
         <div class="form-group w-75">
             <label for="aboutMe" class="control-label fs-4 ">About Me</label>

@@ -1,13 +1,21 @@
 const express = require('express');
 const { MongoClient } = require("mongodb")
+const session = require('express-session')
 
 
 const router = express.Router();
+
+router.use(session({
+    saveUninitialized: true,
+    resave: false,
+    secret: "your-secret-key"
+}))
 
 router.get('', (req, res) => {
     console.log(req.params.data);
     res.render("experience", { message: req.params.data });
 })
+
 router.post('', async (req, res) => {
 
     const { position, startDate, stillHere, companyName, aboutExperience } = req.body;
@@ -36,7 +44,11 @@ router.post('', async (req, res) => {
     console.log(message);
     // req.user = 'my user';
     // res.redirect(`/experience/${message}`);
-    res.render('experience', { message })
+    //res.render('experience', { message })
+
+    //passing to the page being redirected
+    req.session.message = message;
+    res.redirect('/experience');
 
 })
 

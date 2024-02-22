@@ -1,0 +1,40 @@
+<div class=" d-flex flex-wrap ">
+    <p class="fs-3 text-primary text-wrap text-underline text-center w-100 fw-bold ">
+        {{message}}
+    </p>
+
+    <div>
+        <h3 class="text-primary fw-bold text-uppercase text-center">Create New Account </h3>
+        <img src="/Images/personal_information.png" alt="" class="w-100">
+    </div>
+
+    <form class="container w-50 h-100 d-flex flex-column align-items-center gap-3" method="post" action="/signup">
+        <div class="form-group w-75">
+            <label for="email" class="control-label fs-4 fw-bold">Email</label>
+            <input type="email" name="email" class="form-control fw-bold p-2 fs-3" required value={{email}}>
+        </div>
+        <div class="form-group w-75">
+            <label for="password" class="control-label fs-4 fw-bold">Password</label>
+            <input type="password" name="password" class="form-control fw-bold p-2 fs-3" required value={{password}}>
+        </div>
+        <div class="form-group w-75">
+            <label for="passwordRepeat" class="control-label fs-4 fw-bold">Repeat Password</label>
+            <input type="password" name="passwordRepeat" class="form-control fw-bold p-2 fs-3" required
+                value={{passwordRepeat}}>
+            <p>Repeat password</p>
+        </div>
+        <div class="form-group w-75">
+            <p class="text-success me-auto fw-bold">Password must fullfill the following criteria</p>
+            <ul>
+                <li>Atleast 8 characters long</li>
+                <li>Must contain letter, number and symbol</li>
+            </ul>
+        </div>
+        <div class="form-group w-75">
+            <input type="submit" value="Sign Up" class="btn btn-primary align-self-center w-100">
+        </div>
+</div>
+
+</div>
+
+</script>

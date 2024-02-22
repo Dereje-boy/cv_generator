@@ -1,33 +1,58 @@
 const express = require('express');
 const router = express.Router();
-const createCV = require('../createCV');
+const session = require('express-session')
 
-let message = ""
-var firstname, lastname, phoneNumber, email, aboutMe;
+//user defined modules
+const createCV = require('../createCV');
+const userModel = require('../models/user');
+const mongoModel = require('../models/mongoClient');
+
+router.use(session({
+    saveUninitialized: true,
+    secret: 'your-secret-key',
+    resave: false
+}))
 
 router.get("/", (req, res) => {
-    res.render("basicInformation", { title: 'CV Generator | Basic Information', message, firstname, lastname, phoneNumber, email, aboutMe });
+    res.render("basicInformation",
+        {
+            title: 'CV Generator | Basic Information',
+            message: req.session.message
+        });
 })
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+
+    const usersCollection = mongoModel.getClientConnection('users')
 
     firstname = req.body.firstname;
     lastname = req.body.lastname;
     phoneNumber = req.body.phoneNumber;
     email = req.body.email;
+    city = req.body.city;
+    state = req.body.state;
     aboutMe = req.body.aboutMe;
 
-    // console.log({ firstname, lastname, phoneNumber, email, aboutMe });
     console.log(req.body);
+    const thisUser = new userModel.user(firstname, lastname, phoneNumber, email, city, state, aboutMe);
+    console.log();
 
-    message = failFirstname(firstname)
-    message = message + failLastname(lastname);
-    message = message + failPhoneNumber(phoneNumber);
-
-
+    //updating the cv with this provided name
     createCV.createCV(firstname + " " + lastname);
 
-    res.redirect('/experience')
+
+    //inserting to mongo    
+    const { acknowledged } = await mongoModel.insertOneUser(thisUser)
+    console.log(acknowledged);
+
+    if (acknowledged) message = `"${firstname} ${lastname}" saved successfully.`;
+    else
+        message = `"${firstname} ${lastname}" Not saved successfully.`;
+
+    // passing message through session module
+    req.session.message = message;
+
+    res.redirect('/basicInformation')
 })
 
 function failFirstname(firstname) {

@@ -5,15 +5,17 @@
         border-radius: 10px;
         min-height: 80vh;
     }
+
+    .left-container,
+    .right-container {
+        border-radius: 10px;
+    }
 </style>
 
-<div class="exp-container w-100 border border-primary p-2 d-flex gap-2">
-
-
+<div class="exp-container w-100 border border-primary p-2 mt-3 mb-5 d-flex gap-2 ">
     <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-success fw-bold">Your Added
             Experiences</h3>
-
         <div class="one-added-exp card w-100 p-2">
             <div class="card-header">
                 <h5>Position: Junior Surveyor</h5>
@@ -99,7 +101,7 @@
                     required>{{aboutExperience}}</textarea>
             </div>
             <div class="form-group w-50">
-                <input type="submit" value="Add Experience" class="btn btn-primary align-self-center w-100 fs-3">
+                <input type="submit" value="Add Experience" class="btn btn-primary align-self-center fs-3">
             </div>
         </form>
 
