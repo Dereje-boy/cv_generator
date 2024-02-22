@@ -1,7 +1,10 @@
 const express = require('express');
 const body_parser = require("body-parser")
 const handlebars = require("express-handlebars").create({ defaultLayout: 'main' });
-const { MongoClient } = require("mongodb")
+const mongoose = require("mongoose")
+
+//schema
+const userSchema = require('./models/user');
 
 //Routes
 const routerBasicInformation = require('./routes/basicInformation');
@@ -10,6 +13,42 @@ const education = require('./routes/education');
 const languages = require('./routes/languages');
 const reference = require('./routes/reference');
 const hobbies = require('./routes/hobbies');
+const login = require('./routes/login')
+const signup = require('./routes/signup')
+
+//instantiating mongo
+// Connect to MongoDB database
+mongoose.connect('mongodb://localhost:27017/cvGenerator', {});
+
+mongoose.connection.on('connected', async () => {
+    console.log("Mongo DB connected successfully")
+
+    //console.log(userSchema);
+    const newUser = new userSchema({
+        email: "newUser@gmail.com"
+    });
+
+    console.log('\n=== Inserting new user');
+    try {
+        const insertResult = await newUser.save();
+        console.log(insertResult);
+    } catch (e) {
+        console.log('\n====== Error =====\n', e._message, '\n===== Error ====\n')
+    }
+
+    try {
+        const findResult = await userSchema.find();
+        console.log('\n==== Searching for all existing documents\n')
+        console.log(findResult);
+        console.log('\n==== Searching for all existing documents\n')
+    } catch (e) {
+        console.log('====== Error =====\n', e._message, '\n===== Error ====\n\n')
+    }
+
+})
+mongoose.connection.on('error', (err) => {
+    console.error('Failed to connect to MongoDB\n', err);
+})
 
 const app = express();
 
@@ -17,7 +56,6 @@ app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
 app.use(body_parser())
-const tsayishDoc = { firstname: "Tsayish", lastname: "Gezahegn", phoneNumber: "+28589347834", email: "tsayishGezahegn@gmail.com", aboutMe: "Purchaser at hacikon company" };
 
 //Routing
 app.use('/basicInformation', routerBasicInformation);
@@ -26,10 +64,15 @@ app.use('/education', education);
 app.use('/languages', languages);
 app.use('/reference', reference);
 app.use('/hobbies', hobbies);
+app.use('/login', login);
+app.use('/signup', signup);
 
+//homepage
 app.get("/", (req, res) => {
     res.render("index");
 })
+
+// /updated
 app.get("/updated", (req, res) => {
 })
 
@@ -114,8 +157,6 @@ function pdfCreator(res) {
     doc.end();
 }
 
-createConnection()
-
 async function createConnection() {
     const client = new MongoClient('mongodb://localhost:27017');
     const connection = await client.connect();
@@ -128,4 +169,4 @@ async function createConnection() {
     return connection;
 }
 
-app.listen(3000, () => console.log("The server started running on port 3k"))
+app.listen(3000, () => console.log("The server started running on port 3000"))
