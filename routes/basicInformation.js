@@ -1,29 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const session = require('express-session')
+
+const createCV = require('../createCV');
 
 //user defined modules
-const createCV = require('../createCV');
-const userModel = require('../models/user');
-const mongoModel = require('../models/mongoClient');
-
-router.use(session({
-    saveUninitialized: true,
-    secret: 'your-secret-key',
-    resave: false
-}))
+const schema = require('../models/personalInformation');
 
 router.get("/", (req, res) => {
     res.render("basicInformation",
         {
-            title: 'CV Generator | Basic Information',
+            title: 'CV Gen... | Basic Information',
             message: req.session.message
         });
+    delete req.session.message
 })
 
 router.post("/", async (req, res) => {
-
-    const usersCollection = mongoModel.getClientConnection('users')
 
     firstname = req.body.firstname;
     lastname = req.body.lastname;
@@ -33,44 +25,34 @@ router.post("/", async (req, res) => {
     state = req.body.state;
     aboutMe = req.body.aboutMe;
 
-    console.log(req.body);
-    const thisUser = new userModel.user(firstname, lastname, phoneNumber, email, city, state, aboutMe);
-    console.log();
+    //all information to store
+    // console.log(req.body);
 
     //updating the cv with this provided name
-    createCV.createCV(firstname + " " + lastname);
+    //createCV.createCV(firstname + " " + lastname);
 
+    //you can get the logged in user email and _id
+    //console.log('who is this:', res.theUser)
 
-    //inserting to mongo    
-    const { acknowledged } = await mongoModel.insertOneUser(thisUser)
-    console.log(acknowledged);
+    //inserting the user info by using defined pi schema
+    // pi = Personal Information
 
-    if (acknowledged) message = `"${firstname} ${lastname}" saved successfully.`;
-    else
-        message = `"${firstname} ${lastname}" Not saved successfully.`;
+    const thisInfo = new schema({
+        firstname, lastname, phoneNumber, email, city, state, aboutMe, user_id: res.theUser._id
+    });
 
-    // passing message through session module
-    req.session.message = message;
-
-    res.redirect('/basicInformation')
+    thisInfo.save().then(insertResult => {
+        //console.log('insert Result: \n', insertResult);
+        // passing message through message variable defined above
+        req.session.message = 'The Information inserted successfully';
+        console.log(req.session.message);
+        res.redirect('/basicInformation')
+    }).catch(e => {
+        // passing message through session module
+        req.session.message = `The information is not inserted \n ${e}`;
+        console.log(req.session.message);
+        res.redirect('/basicInformation')
+    })
 })
-
-function failFirstname(firstname) {
-    if (firstname.length < 3)
-        return "The firstname shouldnot be lessthan three characters.";
-    else return false;
-}
-
-function failLastname(lastname) {
-    if (lastname.length < 3)
-        return "The lastname shouldnot be lessthan three characters.";
-    else return false;
-}
-
-function failPhoneNumber(phoneNumber) {
-    if (phoneNumber.length < 9 || phoneNumber.length > 14)
-        return "The phone number should be nine to fourteen characters";
-    else return false;
-}
 
 module.exports = router;

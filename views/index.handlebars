@@ -29,13 +29,90 @@
     .card-body {
         text-align: center;
     }
+
+    .index-loading-container {
+        opacity: 0;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0C0603;
+        display: grid;
+        place-content: center;
+        z-index: 999;
+        transition-property: opacity;
+        transition-duration: .5s;
+        transition-timing-function: ease-in-out;
+    }
+
+    .fullscreen-loader {
+        width: 60px;
+        height: 60px;
+        border: 5px solid green;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .5s ease infinite alternate spinner2;
+    }
+
+    @keyframes spinner2 {
+        form {
+            transform: rotate(360deg) scale(1);
+        }
+
+        to {
+            transform: rotate(1turn) scale(1.6);
+        }
+    }
+
+
+    .card {
+        position: relative;
+    }
+
+    .image-placeholder {
+        position: absolute;
+        width: 100%;
+        height: 50%;
+        background-color: white;
+        top: 0;
+        left: 0;
+        display: grid;
+        place-content: center;
+        transition-property: opacity;
+        transition-duration: 1s;
+        transition-timing-function: ease-in-out;
+
+    }
+
+    .image-loader {
+        width: 60px;
+        height: 60px;
+        border: 5px solid green;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .5s ease infinite alternate spinner;
+    }
 </style>
+
+{{!-- <div class="index-loading-container d-flex justify-content-center align-items-center">
+    <div class="fullscreen-loader">
+
+    </div>
+
+</div> --}}
 
 <div class="index-container w-100 my-3 d-flex flex-wrap gap-3 justify-content-center">
 
     {{!-- personal information --}}
     <div class="card">
         <img src="/Images/personal_information.png" class="card-img-top" alt="...">
+        <div class="image-placeholder" id="image-placeholder">
+            <div class="image-loader" id="image-loader">
+
+            </div>
+        </div>
         <div class="card-body">
             <h5 class="card-title">Personal Information</h5>
             <p class="card-text">Fill all required personal information to get trust easily form employers </p>
@@ -46,6 +123,7 @@
     {{!-- education --}}
     <div class="card">
         <img src="/Images/education.jpg" class="card-img-top" alt="...">
+
         <div class="card-body">
             <h5 class="card-title">Education</h5>
             <p class="card-text">With out Education, it is difficult to be appointed for further step. So, Add your
@@ -74,7 +152,6 @@
             <a href="languages" class="btn btn-primary">Manage Languages</a>
         </div>
     </div>
-
 
     {{!-- reference --}}
     <div class="card">

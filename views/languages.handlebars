@@ -4,35 +4,36 @@
         border-radius: 10px;
         min-height: 80vh;
     }
+
+    .one-added-lang {
+        opacity: 1;
+        display: block;
+        transition: opacity;
+        transition-duration: 1s;
+        transition-timing-function: ease-in-out;
+
+    }
 </style>
 
 <div class="lang-container w-100 border border-primary p-2 d-flex gap-2">
-
 
     <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-success fw-bold">Your Added
             Languages</h3>
 
+        {{#each thisUserLanguages}}
         <div class="one-added-lang card w-100 p-2">
             <div class="card-header">
-                <h5>Amharic</h5>
+                <h4 class="text-black text-capitalize ">{{language}}</h4>
             </div>
-            <div class="card-body">
-                <h5 class="ps-3 card-title">Level : Native</h5>
-                <a href="experience/edit/1" class="btn btn-primary ps-3">Edit Language</a>
-                <button type="button" class=" btn btn-danger">Delete Language</button>
-            </div>
-        </div>
-        <div class="one-added-lang card w-100 p-2">
-            <div class="card-header">
-                <h5>English</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="ps-3 card-title">Level : Fluent</h5>
-                <a href="experience/edit/1" class="btn btn-primary ps-3">Edit Language</a>
-                <button type="button" class=" btn btn-danger">Delete Language</button>
+            <div class="card-body d-flex flex-wrap gap-3 align-items-center">
+                <h5 class="ps-3 card-title">Level : {{level}}</h5>
+                <button id="{{id}}" type="button" class="delete-language-btn btn btn-link text-danger">Delete
+                </button>
             </div>
         </div>
+
+        {{/each}}
 
     </div>
 
@@ -40,11 +41,8 @@
     <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-warning fw-bold">Add Your New Language Skill</h3>
 
-
         <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
-
             {{message}}
-
         </p>
 
         <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="languages">
@@ -54,10 +52,15 @@
             </div>
             <div class="form-group w-100">
                 <label for="level" class="control-label fs-4">Level *</label>
-                <input type="text" name="level" class="form-control fw-bold p-2 fs-3" required value={{level}}>
+                <select id="level" name="level" class="form-control fw-bold p-2 fs-3" required value="Fluent">
+                    <option value="Native" selected>Native</option>
+                    <option value="Fluent">Fluent</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Beginner">Beginner</option>
+                </select>
             </div>
-            <div class="form-group w-50">
-                <input type="submit" value="Add Language" class="btn btn-primary align-self-center w-100 fs-3">
+            <div class="form-group d-flex flex-wrap justify-content-center">
+                <input type="submit" value="Add Language" class="btn btn-primary align-self-center fs-3">
             </div>
         </form>
 
@@ -65,3 +68,5 @@
     </div>
 
 </div>
+
+<script src="/script/languages.js"></script>

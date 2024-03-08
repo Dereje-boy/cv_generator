@@ -4,41 +4,52 @@
         border-radius: 10px;
         min-height: 80vh;
     }
+
+    .one-added-ref {
+        opacity: 1;
+        transition-property: opacity;
+        transition-duration: 1s;
+        transition-timing-function: ease-in-out;
+    }
+
+    #object-id {
+        transition: opacity;
+        transition-duration: 1s;
+        transition-timing-function: ease-in;
+    }
 </style>
 
 <div class="ref-container w-100 border border-primary p-2 d-flex gap-2">
 
-
     <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-success fw-bold">Your Added
             References</h3>
+        <p class="fs-3 text-success text-wrap text-underline text-center w-100">
+            {{message}}
+        </p>
 
+        {{!-- For Each reference --}}
+        {{#each referencesData}}
         <div class="one-added-ref card w-100 p-2">
             <div class="card-header">
-                <h5>Fullname: Abebe Kebede</h5>
+                <h5>Fullname: {{fullname}}</h5>
             </div>
             <div class="card-body">
-                <h5 class="ps-3 card-title">Phone: +251989008877</h5>
-                <h5 class="ps-3 card-title">Email: abekabe@gmail.com</h5>
-                <h5 class="ps-3 card-title">Role : </h5>
-                <a href="reference/edit/1" class="btn btn-primary ps-3">Edit Reference</a>
-                <button type="button" class=" btn btn-danger">Delete Reference</button>
+                <h5 class="ps-3 card-title">Phone: {{phoneNumber}}</h5>
+                <h5 class="ps-3 card-title">Email: {{email}}</h5>
+                <h5 class="ps-3 card-title">Role : {{role}}</h5>
+                <button id="delete-button" class="btn btn-danger ps-3">Delete Reference</button>
+                <p id="object-id" class="opacity-0">{{objectID}}</p>
             </div>
 
         </div>
+        {{/each}}
 
     </div>
 
     {{!-- right container --}}
     <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-warning fw-bold">Add Your New Reference</h3>
-
-
-        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
-
-            {{message}}
-
-        </p>
 
         <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="reference">
             <div class="form-group w-100">
@@ -66,3 +77,6 @@
     </div>
 
 </div>
+
+<script src="/script/jquery.js"></script>
+<script src="/script/references.js"></script>

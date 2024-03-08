@@ -2,6 +2,8 @@ const express = require('express');
 const body_parser = require("body-parser")
 const handlebars = require("express-handlebars").create({ defaultLayout: 'main' });
 const mongoose = require("mongoose")
+const cookieParser = require('cookie-parser')
+const session = require('express-session');
 
 //schema
 const userSchema = require('./models/user');
@@ -14,11 +16,21 @@ const languages = require('./routes/languages');
 const reference = require('./routes/reference');
 const hobbies = require('./routes/hobbies');
 const login = require('./routes/login')
-const signup = require('./routes/signup')
+const signup = require('./routes/signup');
+const dashboard = require('./routes/dashboard')
+
+//middlewares
+const verifier = require('./middlewares/verify');
 
 //instantiating mongo
 // Connect to MongoDB database
-mongoose.connect('mongodb://localhost:27017/cvGenerator', {});
+mongoose.connect('mongodb://localhost:27017/cvGenerator').
+    then(success => {
+        //console.log(success);
+    }).
+    catch(e => {
+        console.log('Failed to connect to MongoDB\n');
+    });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -28,7 +40,7 @@ mongoose.connection.on('connected', async () => {
         email: "newUser@gmail.com"
     });
 
-    console.log('\n=== Inserting new user');
+    console.log('\n=== Inserting new user =====');
     try {
         const insertResult = await newUser.save();
         console.log(insertResult);
@@ -38,16 +50,13 @@ mongoose.connection.on('connected', async () => {
 
     try {
         const findResult = await userSchema.find();
-        console.log('\n==== Searching for all existing documents\n')
-        console.log(findResult);
-        console.log('\n==== Searching for all existing documents\n')
+        console.log('\n==== Searching for all existing documents ======')
+        console.log(findResult.length);
+        console.log('==== Searching for all existing documents ======\n')
     } catch (e) {
         console.log('====== Error =====\n', e._message, '\n===== Error ====\n\n')
     }
 
-})
-mongoose.connection.on('error', (err) => {
-    console.error('Failed to connect to MongoDB\n', err);
 })
 
 const app = express();
@@ -56,16 +65,24 @@ app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
 app.use(body_parser())
+app.use(cookieParser())
+app.use(session({
+    secret: 'your-secret-key', // Change this to a random string
+    resave: false,
+    saveUninitialized: true
+}));
 
-//Routing
-app.use('/basicInformation', routerBasicInformation);
-app.use('/experience', experience);
-app.use('/education', education);
-app.use('/languages', languages);
-app.use('/reference', reference);
-app.use('/hobbies', hobbies);
+//============Routing
+app.use('/basicInformation', verifier, routerBasicInformation);
+app.use('/experience', verifier, experience);
+app.use('/education', verifier, education);
+app.use('/languages', verifier, languages);
+app.use('/reference', verifier, reference);
+app.use('/hobbies', verifier, hobbies);
+app.use('/dashboard', verifier, dashboard);
 app.use('/login', login);
 app.use('/signup', signup);
+//use session to pass information while redirection
 
 //homepage
 app.get("/", (req, res) => {

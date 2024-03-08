@@ -1,23 +1,84 @@
 const express = require('express')
-const session = require('express-session')
+const mongoose = require('mongoose')
+
+//reference schema
+const schema = require('../models/reference');
 
 const Router = express.Router();
 
-Router.use(session({
-    secret: 'your-secret-key', // Change this to a random string
-    resave: false,
-    saveUninitialized: true
-}))
+Router.get('/', async (req, res) => {
+    //console.log(req.session.message);
+    try {
+        const references = await schema.find();
+        let referencesData = [];
+        for (let i = 0; i < references.length; i++) {
 
-Router.get('/', (req, res) => {
-    console.log(req.session.message);
-    // console.log(req.session ? res.session.message : "");
-    res.render('reference')
+            thisRef = {
+                fullname: references[i].fullname,
+                phoneNumber: references[i].phoneNumber,
+                email: references[i].email,
+                role: references[i].role,
+                objectID: references[i]._id
+            }
+            referencesData.push(thisRef)
+        }
+        console.log('references', referencesData)
+        res.render('reference',
+            {
+                message: req.session.message,
+                referencesData: referencesData
+            }
+        )
+    } catch (error) {
+        res.render('reference', { message: 'unable to load reference Data' })
+        console.log(error)
+    }
+    delete req.session.message;
 })
 
 Router.post('/', (req, res) => {
-    req.session.message = "reference added message";
-    res.redirect('/reference')
+
+    const reference = new schema({
+        fullname: req.body.fullname,
+        phoneNumber: req.body.phone,
+        email: req.body.email,
+        role: req.body.role,
+        user_id: res.theUser._id
+    })
+
+    reference.save().then(insertResult => {
+        req.session.message = "reference added message";
+        return res.redirect('/reference')
+        //console.log(insertResult)
+    }).catch(error => {
+        console.log(error)
+        req.session.message = "Unable to save the reference " + error;
+        return res.redirect('/reference')
+    })
+})
+
+Router.delete('/', async (req, res) => {
+    console.log(req.body)
+    schema.deleteOne({ _id: new mongoose.Types.ObjectId(req.body.id) }).then(deleteResult => {
+        console.log(deleteResult)
+        if (deleteResult.deletedCount) {
+            res.send({
+                success: true,
+                reason: null
+            })
+        } else {
+            res.send({
+                success: false,
+                reason: null
+            })
+        }
+    }).catch(e => {
+        console.log(e);
+        res.send({
+            success: false,
+            reason: e
+        })
+    })
 })
 
 module.exports = Router;

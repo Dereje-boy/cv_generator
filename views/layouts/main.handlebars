@@ -9,6 +9,8 @@
     <title>{{title}}</title>
     <link rel="stylesheet" href="/Style/main.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+
+    <script src="/script/jQuery.js"></script>
 </head>
 
 <style>
@@ -50,6 +52,26 @@
     .close-container h4 {
         border-radius: 10px;
         padding: 5px 20px;
+    }
+
+    .loader {
+        width: 40px;
+        height: 40px;
+        border: 5px solid green;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .5s ease infinite alternate spinner;
+    }
+
+    @keyframes spinner {
+        form {
+            transform: rotate(360deg) scale(1);
+        }
+
+        to {
+            transform: rotate(1turn) scale(1.2);
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -112,7 +134,8 @@
 
             {{!-- Message container --}}
             <div class="message-container w-75 d-flex justify-content-center align-items center ">
-                <h5 class="text-primary text-center"> Please Enter your email and password to enter dashboard </h5>
+                <h5 class="text-primary text-center" id="message"> Please Enter your email and password to enter
+                    dashboard </h5>
             </div>
 
             {{!-- Email container --}}
@@ -136,8 +159,11 @@
             </div>
 
             {{!-- Submit button container --}}
-            <div class="submit-container w-75 d-flex justify-content-center">
-                <input type="submit" value="Submit" class="btn btn-success">
+            <div class="submit-container w-100 d-flex justify-content-center align-items-center gap-3">
+                <div class="loader d-none">
+
+                </div>
+                <input id="submit-button" type="submit" value="Submit" class="btn btn-success">
             </div>
 
         </form>
@@ -154,8 +180,6 @@
         Developed by : Dere boy
 
     </footer>
-
-    <script src="/script/jQuery.js"></script>
 
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 

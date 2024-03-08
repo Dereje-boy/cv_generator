@@ -15,29 +15,44 @@ userForm.addEventListener('submit', (e) => {
 
     data = { email, password, passwordRepeat }
 
-    console.log(data)
+    //console.log(data)
+
+    document.querySelector('#user-submit-button').disabled = true;
 
     $.post({
-        url: '/signup', // Replace with your backend URL
+        url: '/signup',
         data: data,
-        success: function (response) {
+        success: function (Data) {
             // Display response in the 'message' paragraph
-            console.log(response)
-            message = '';
-            if (typeof response == 'string') message = response;
-            else
-                (Object.keys(response)).forEach(r => {
-                    message += response[r] + " ";
-                    return message
-                })
-            $('#message').text(message);
+            console.log(Data)
 
-            console.log();
+            let message = Data.message;
+            let status = Data.status;
+
+            //status === false if there isno error, > error.status === false
+            if (status === false)
+                window.location.href = '/dashboard'
+
+            $('#result-message').text(message);
+
+            //returning back the button to work
+            document.querySelector('#user-submit-button').disabled = false;
         },
+
         error: function (xhr, status, error) {
             // Handle errors
-            console.error(xhr.responseText);
-            $('#message').text('Error: ' + xhr.responseText);
+            let errorMessage = '';
+
+            try {
+                errorMessage = xhr.responseText;
+            } catch (error) {
+                $('#result-message').text('Error: No Internet Connection');
+            }
+            console.error(errorMessage);
+            $('#result-message').text('Error: ' + errorMessage.length > 0 ? errorMessage : '');
+
+            //returning back the button to work
+            document.querySelector('#user-submit-button').disabled = false;
         }
     });
 })

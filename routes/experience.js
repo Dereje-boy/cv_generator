@@ -1,55 +1,52 @@
 const express = require('express');
-const { MongoClient } = require("mongodb")
-const session = require('express-session')
 
+//experience schema
+const schema = require('../models/experience');
 
 const router = express.Router();
 
-router.use(session({
-    saveUninitialized: true,
-    resave: false,
-    secret: "your-secret-key"
-}))
+let message;
 
 router.get('', (req, res) => {
-    console.log(req.params.data);
-    res.render("experience", { message: req.params.data });
+    console.log('message', message);
+    res.render("experience", { title: "CV Gen.. | Experience", message });
+    message = undefined;
 })
 
 router.post('', async (req, res) => {
 
+    console.log(req.body)
+
     const { position, startDate, stillHere, companyName, aboutExperience } = req.body;
+
     let { endDate } = req.body;
 
     //typeof stillHere is either string with 'on' or undefined type
     if (typeof stillHere == typeof "") endDate = undefined;
 
-    console.log({ position, startDate, endDate, stillHere, companyName, aboutExperience });
 
-    const client = new MongoClient('mongodb://localhost:27017');
-    const connection = await client.connect();
-    const cvGeneratorDB = connection.db('cvGenerator');
-    const usersCollection = cvGeneratorDB.collection('users');
+    let thisExperience = new schema({
+        position: position,
+        companyName: companyName,
+        aboutExperience: aboutExperience,
+        startDate: startDate,
+        endDate: endDate,
+        user_id: res.theUser._id
 
-    const insertResult = await usersCollection.insertOne({
-        position,
-        startDate,
-        endDate,
-        companyName,
-        aboutExperience
-    });
-    const successMessage = "Experience Added Successfully";
-    const unsuccessMessage = "Adding Experience Unsuccessfull, Please try Again.";
-    const message = insertResult.acknowledged ? successMessage : unsuccessMessage;
-    console.log(message);
-    // req.user = 'my user';
-    // res.redirect(`/experience/${message}`);
-    //res.render('experience', { message })
+    })
 
-    //passing to the page being redirected
-    req.session.message = message;
-    res.redirect('/experience');
+    thisExperience.save().then(insertResult => {
+        //console.log('insert Result: \n', insertResult);
+        // passing message through message variable defined above
+        message = 'Experience Added Successfully';
 
+    }).catch(e => {
+        // passing message through session module
+        message = `Adding Experience Unsuccessfull, Please try Again. \n ${e}`;
+        console.log(e.message);
+    }).finally(() => {
+        res.redirect('/experience')
+    })
 })
 
 module.exports = router;
