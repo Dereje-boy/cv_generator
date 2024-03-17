@@ -6,25 +6,28 @@ const schema = require('../models/hobbies');
 const Router = express.Router();
 
 Router.get('/', async (req, res) => {
-    console.log(req.session.message);
+    console.log('session message ', req.session.message);
     try {
         const hobbies = await schema.find({ user_id: res.theUser._id });
-        thisUsersHobbies = hobbies[0].hobby;
-        console.log(thisUsersHobbies)
+        thisUsersHobbies = hobbies[0]?.hobby;
+        // console.log('this user hobbies', thisUsersHobbies)
         res.render('hobbies',
             {
                 message: req.session.message,
-                thisUsersHobbies
+                thisUsersHobbies,
+                email: res.theUser.email
             });
 
     } catch (error) {
+        console.log(error)
         res.render('hobbies',
             {
-                message: "unable to load your list of hobbies"
+                message: "unable to load your list of hobbies",
+                email: res.theUser.email
             });
+    } finally {
+        delete req.session.message
     }
-
-    delete req.session.message
 })
 
 Router.post('/', (req, res) => {

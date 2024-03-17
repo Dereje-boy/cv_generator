@@ -14,7 +14,7 @@ const verifier = (req, res, next) => {
         jwt.verify(token, 'my-secret-key', async (error, theUser) => {
             //unable to verify the cookie so render login page
             if (error) {
-                console.log(error.message)
+                console.log('jwt token verifier error ', error.message)
                 return renderSignupPage(res, req);
             };
 

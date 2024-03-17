@@ -12,8 +12,6 @@ app.use(express.static("/"))
 console.log("welcome to cv generator app....");
 log(CV.create());
 
-
-
 app.get("/", (req, res) => {
     // res.send("you are at Home");
     pdfCreator(res);

@@ -23,11 +23,11 @@ Router.get('/', async (req, res) => {
 
         //console.log('this user langauges', thisUserLanguages)
 
-        return res.render('languages', { title: "CV Gen.. | Language", message: req.session.message, thisUserLanguages });
+        return res.render('languages', { title: "CV Gen.. | Language", message: req.session.message, email: res.theUser.email, thisUserLanguages });
 
     } catch (error) {
         console.log(error)
-        return res.render('languages', { title: "CV Gen.. | Language", message: req.session.message });
+        return res.render('languages', { title: "CV Gen.. | Language", message: req.session.message, email: res.theUser.email });
     } finally {
         delete req.session.message;
     }

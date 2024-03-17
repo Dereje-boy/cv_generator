@@ -11,7 +11,9 @@ Router.use(session({
 Router.get('', (req, res) => {
     const theUserEmail = req.session.theUser != null ? req.session.theUser.email : res.theUser;
     console.log('the user email :', theUserEmail);
-    res.render('dashboard', { email: theUserEmail })
+    res.render('dashboard', {
+        email: res.theUser.email,
+    })
 })
 
 Router.post('/', (req, res) => {

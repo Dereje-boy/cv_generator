@@ -26,11 +26,12 @@ Router.get('/', async (req, res) => {
         res.render('reference',
             {
                 message: req.session.message,
-                referencesData: referencesData
+                referencesData: referencesData,
+                email: res.theUser.email
             }
         )
     } catch (error) {
-        res.render('reference', { message: 'unable to load reference Data' })
+        res.render('reference', { message: 'unable to load reference Data', email: res.theUser.email })
         console.log(error)
     }
     delete req.session.message;

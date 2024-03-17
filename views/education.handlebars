@@ -5,50 +5,46 @@
         border-radius: 10px;
         min-height: 80vh;
     }
+
+    .one-added-edu {
+        opacity: 1;
+        transition-property: opacity;
+        transition-duration: 1s;
+        transition-timing-function: ease-in-out;
+    }
 </style>
 
-<div class="edu-container w-100 border border-primary p-2 d-flex gap-2">
+<div class="edu-container w-100 border border-primary p-2 d-flex gap-2 flex-wrap">
 
 
-    <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
-        <h3 class="w-100 text-center text-success fw-bold">Your Added
+    <div class="left-container flex-grow-1 min-h-100 border border-success d-flex flex-column gap-3 p-3">
+        <h3 class="w-100 text-center text-primary fw-bold">Your Added
             Educations</h3>
 
+
+        {{#each thisEdu}}
         <div class="one-added-edu card w-100 p-2">
             <div class="card-header">
-                <h5>BA in Accounting</h5>
+                <h5>{{titleOfDocument}}</h5>
             </div>
             <div class="card-body">
-                <h5 class="ps-3 card-title">University or College: Rift Valley University College</h5>
-                <h5 class="ps-3 card-title">Year of Graduation: October, 2022</h5>
-                <h5 class="ps-3 card-title">CGPA: 3.04</h5>
-                <a href="education/edit/1" class="btn btn-primary ps-3">Edit Education</a>
-                <button type="button" class=" btn btn-danger">Delete Education</button>
+                <h5 class="ps-3 card-title">{{nameOfUniversity}}</h5>
+                <h5 class="ps-3 card-title">{{yearOfGraduation}}</h5>
+                <h5 class="ps-3 card-title">{{CGPA}}</h5>
+                <button id="{{_id}}" type="button" class=" btn btn-danger">Delete </button>
             </div>
 
         </div>
-        <div class="one-added-edu card w-100 p-2">
-            <div class="card-header">
-                <h5>BSc in Surveying Engineering</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="ps-3 card-title">University or College: Arbaminch University</h5>
-                <h5 class="ps-3 card-title">Year of Graduation: June, 2022</h5>
-                <h5 class="ps-3 card-title">CGPA: 3.74</h5>
-                <a href="education/edit/1" class="btn btn-primary ps-3">Edit Education</a>
-                <button type="button" class=" btn btn-danger">Delete Education</button>
-            </div>
-
-        </div>
+        {{/each}}
 
     </div>
 
     {{!-- right container --}}
-    <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
+    <div class="right-container flex-grow-1 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-warning fw-bold">Add Your New Education</h3>
 
 
-        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+        <p class="fs-3 text-center fw-bold text-success text-wrap w-100">
 
             {{message}}
 
@@ -84,3 +80,5 @@
     </div>
 
 </div>
+
+<script src="/script/education.js"></script>

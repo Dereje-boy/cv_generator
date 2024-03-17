@@ -1,8 +1,10 @@
 const express = require('express');
 const body_parser = require("body-parser")
 const handlebars = require("express-handlebars").create({ defaultLayout: 'main' });
+const multer = require('multer')
 const mongoose = require("mongoose")
 const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
 //schema
@@ -18,9 +20,13 @@ const hobbies = require('./routes/hobbies');
 const login = require('./routes/login')
 const signup = require('./routes/signup');
 const dashboard = require('./routes/dashboard')
+const createCV = require('./routes/createCV')
 
 //middlewares
 const verifier = require('./middlewares/verify');
+
+//check the user exist for the token we have on client side
+const checkUserExist = require('./model/user/checkUserExist');
 
 //instantiating mongo
 // Connect to MongoDB database
@@ -64,6 +70,7 @@ const app = express();
 app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
+// app.use(multer({ dest: '/pp_images/'}));
 app.use(body_parser())
 app.use(cookieParser())
 app.use(session({
@@ -80,13 +87,42 @@ app.use('/languages', verifier, languages);
 app.use('/reference', verifier, reference);
 app.use('/hobbies', verifier, hobbies);
 app.use('/dashboard', verifier, dashboard);
+app.use('/createCv', verifier, createCV);
 app.use('/login', login);
 app.use('/signup', signup);
 //use session to pass information while redirection
 
+
 //homepage
-app.get("/", (req, res) => {
-    res.render("index");
+app.get("/", (req, res) => { //1. first check if the right cookie available
+    const token = req.cookies.token;
+    console.log(token);
+
+    email = '';
+
+    //check to cookie
+    if (token) {
+        jwt.verify(token, 'my-secret-key', async (error, theUser) => {
+            //unable to verify the cookie so render login page
+            if (error)
+                return res.render("index", { email });
+
+            //checking the user with verified email address exist
+            const userExist = checkUserExist.check(theUser.email).then(userExist => {
+                //if it exist it send us email and _id of the user
+                // console.log('checking the user exist ? ', userExist)
+
+                email = userExist != null ?
+                    userExist.email : ""
+                res.render("index", { email });
+
+            }).catch(e => {
+                res.render("index", { email });
+            })
+        })
+    } else {
+        res.render("index", { email });
+    }
 })
 
 // /updated
@@ -103,7 +139,6 @@ function createCV1() {
         .font('fonts/PalatinoBold.ttf')
         .fontSize(factorME(15))
         .text('Dereje Gezahegn', 48, 4);
-
 
     doc.image('C:\\Users\\Dere\\Downloads\\Dereje_3X4_photo-removebg.png', {
         fit: [factorME(45), factorME(45)]
@@ -172,18 +207,6 @@ function pdfCreator(res) {
 
     // Finalize PDF file
     doc.end();
-}
-
-async function createConnection() {
-    const client = new MongoClient('mongodb://localhost:27017');
-    const connection = await client.connect();
-    const cvGeneratorDB = connection.db('cvGenerator');
-    const usersCollection = cvGeneratorDB.collection('users');
-    // await cvGeneratorDB.collection('user').drop();
-    // deleting collection which doesnot exist, raises an error
-    const myDoc = { firstname: "Brad", lastname: "Travirsia", phoneNumber: "09898934894", email: "ghioege@gmail.com", aboutMe: "ghieg eiogjeiogj iej geigje iigje gengei gieng ern" };
-    // const insertResult = await usersCollection.insertOne(myDoc);
-    return connection;
 }
 
 app.listen(3000, () => console.log("The server started running on port 3000"))

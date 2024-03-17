@@ -12,7 +12,6 @@ function createCV(fullname) {
     // Create a document
     const doc = new PDFDocument({ size: 'A4' });
 
-
     doc.pipe(fs.createWriteStream('cv.pdf'));
     // doc.moveTo(0, 0).image('images\\210x91.png', {
     //     fit: [factorME(210), factorME(91)]
