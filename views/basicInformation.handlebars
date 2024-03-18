@@ -56,11 +56,12 @@
             <label for="image" class="control-label fs-4 ">Uploaded Image </label>
             <div id="imageContinaer" style="border:1px solid black; border-radius:20px;"
                 class="m-2 bg-white border border-primary">
-                <img id="image" src="" alt="" class="" width="100%" style="border-radius:20px;">
+                <img id="image" src="{{pp_image_path}}" alt="" class="" width="100%" style="border-radius:20px;">
             </div>
             <input type="file" id="imageinput" name="image" accept="image/jpeg, image/png"
                 class="form-control fw-bold p-2 ">
             <p class="text-danger">Only .jpeg and .png image file</p>
+            <p class="text-danger">Make sure the image is square</p>
         </div>
         <div class="form-group w-75">
             {{#if alreadyExist}}
@@ -71,6 +72,7 @@
         </div>
     </form>
     {{/with }}
+    <img id="image" src="{{pp_image_path}}" alt="" class="" width="100%" style="border-radius:20px;">
 
 </div>
 

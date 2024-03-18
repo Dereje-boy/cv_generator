@@ -70,7 +70,6 @@ const app = express();
 app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
-// app.use(multer({ dest: '/pp_images/'}));
 app.use(body_parser())
 app.use(cookieParser())
 app.use(session({
@@ -96,7 +95,7 @@ app.use('/signup', signup);
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
     const token = req.cookies.token;
-    console.log(token);
+    // console.log(token);
 
     email = '';
 
@@ -125,9 +124,6 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
     }
 })
 
-// /updated
-app.get("/updated", (req, res) => {
-})
 
 function createCV1() {
     // Create a document

@@ -59,6 +59,11 @@ const PI_schema = new mongoose.Schema({
         lowercase: true,
         minlength: 2,
     },
+    pp_image_path: {
+        type: String,
+        trim: true,
+        lowercase: true,
+    },
     //this is used to reference whom PI info is added
     user_id: {
         type: Schema.Types.ObjectId,

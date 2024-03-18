@@ -4,6 +4,7 @@ const imageInput = document.getElementById('imageinput');
 const image = document.getElementById('image');
 
 imageInput.addEventListener('change', function () {
+    console.log('rendering the image')
     const file = imageInput.files[0];
     if (file) {
         const reader = new FileReader();

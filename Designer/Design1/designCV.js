@@ -3,6 +3,9 @@ const fs = require('fs')
 
 const factorME = require('./utility')
 
+//the basic information schema to get the pp image path
+const pi_schema = require('../../models/personalInformation');
+
 const renderBasicInformation = require('./basicInformation');
 const renderBasicDesignes = require('./designes');
 const renderExperience = require('./experience');
@@ -10,6 +13,8 @@ const renderEducation = require('./education.js');
 const renderLanguage = require('./language.js');
 const renderReference = require('./reference.js');
 const renderHobbies = require('./hobby');
+const personal_information = require("../../models/personalInformation");
+const {ObjectId} = require("mongodb");
 
 /**
  * @param theUser used as the reference for naming the pdf and fetching respective data from the db and then to render on the pdf.
@@ -48,11 +53,28 @@ async function designCV(theUser) {
     doc.circle(factorME(23), factorME(23), factorME(23)).fill("#fff");
 
     //inserting image
-    doc.image('C:\\Users\\Dere\\Downloads\\Dereje_3X4_photo-removebg.png', 0, 0, {
-        fit: [factorME(46), factorME(46)]
-    });
 
+    try{
 
+        email = theUser?.email;
+        dbData = await personal_information.findOne({ email })
+        theUserInfo = dbData ? dbData : {
+            pp_image_path:'./images/male.jpg'
+        }
+        theUserInfo.pp_image_path?theUserInfo.pp_image_path: './images/male.jpg'
+        doc.image(
+            theUserInfo.pp_image_path?'./public/'+theUserInfo.pp_image_path:
+                './images/male.jpg', 0, 0,
+            {
+            fit: [factorME(46), factorME(46)]
+        });
+    }catch (e) {
+        console.log('Error while inserting the pp image ', e)
+        doc.image('./images/male.jpg', 0, 0, {
+            fit: [factorME(46), factorME(46)]
+        });
+
+    }
     //adding page no. or another to all pages we have
     // const range = doc.bufferedPageRange();
     //     // for (i = range.start, end = range.start + range.count, range.start <= end; i < end; i++) {
@@ -62,7 +84,6 @@ async function designCV(theUser) {
     //     // }
 
     experienceRenderedDoc.end();
-    //doc.end();
 }
 
 module.exports = designCV;

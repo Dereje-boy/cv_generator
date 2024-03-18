@@ -1,36 +1,27 @@
 const express = require('express');
 const router = express.Router();
 
-const createCV = require('../createCV');
-
 //user defined modules
 const schema = require('../models/personalInformation');
 
 const multer = require("multer");
 
-const storage = multer.diskStorage({
-    destination: function (req,file,cb) {
-        cb(null, 'pp_images/')
+const myStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/pp_images/')
     },
-    fileName: function (req, file, cb) {
-        console.log("the file name is ",file.originalname.toString()+'.png')
-        cb(null, file.originalname.toString()+'.png')
+    filename: function (req, file, cb) {
+        let email = thisRes?.theUser.email
+        console.log(file)
+        cb(null, nameImageFile(file,email) )
     }
-});
+})
 
-const upload = multer({storage:multer.diskStorage({
-        destination: function (req,file,cb) {
-            cb(null, '/pp_images/')
-        },
-        fileName: function (req, file, cb) {
-            console.log(file)
-            console.log("the file name is ",file.originalname.toString()+'.png')
-            cb(file.originalname, file.originalname.toString()+'.png')
-            }
-        })
-    })
+let thisRes;
 
+const upload = multer({storage:myStorage});
 router.get("/", async (req, res) => {
+    thisRes = res;
     let email;
 
     try {
@@ -49,7 +40,8 @@ router.get("/", async (req, res) => {
             lastname: PI[0]?.lastname,
             phoneNumber: PI[0]?.phoneNumber,
             state: PI[0]?.state,
-            alreadyExist: PI[0] ? true : false
+            alreadyExist: PI[0] ? true : false,
+            pp_image_path:PI[0]?.pp_image_path
         }
         // console.log('pi', pi)
 
@@ -71,15 +63,13 @@ router.get("/", async (req, res) => {
 
     } finally {
         delete req.session.message
-
     }
 
 })
 
-router.post("/", upload.single('image'), async (req, res) => {
+let pp_image_path;
 
-    // console.log('the file', req.image)
-    console.log('Receiving the file...');
+router.post("/", upload.single('image'), async (req, res) => {
 
     firstname = req.body.firstname;
     lastname = req.body.lastname;
@@ -96,20 +86,28 @@ router.post("/", upload.single('image'), async (req, res) => {
 
     //, user_id: res.theUser._id
     schema.updateOne({ user_id: res.theUser._id }, {
-        firstname, lastname, phoneNumber, email, city, state, aboutMe
+        firstname, lastname, phoneNumber, email, city, state, aboutMe,pp_image_path:'/pp_images/'+pp_image_path
     }, { upsert: true }).then(upsertResult => {
         //console.log('insert Result: \n', insertResult);
         // passing message through message variable defined above
         req.session.message = upsertResult.modifiedCount | upsertResult.matchedCount > 0 ? 'The Information updated successfully' : 'The Information inserted successfully';
         // console.log('insert Result', upsertResult)
-        console.log(req.session.message);
+        // console.log(req.session.message);
         res.redirect('/basicInformation')
     }).catch(e => {
         // passing message through session module
         req.session.message = `The information is not inserted \n ${e}`;
-        console.log(req.session.message);
+        // console.log(req.session.message);
         res.redirect('/basicInformation')
     })
 })
+
+function nameImageFile(file,email) {
+    console.log('original file name', file.originalname)
+    const fileExtension = file.originalname?.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
+    pp_image_path = email+ fileExtension
+    return pp_image_path;
+
+}
 
 module.exports = router;

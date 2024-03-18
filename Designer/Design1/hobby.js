@@ -8,7 +8,7 @@ async function renderHobbies(doc, _id) {
     try{
         const Hobbies = await schema.find({user_id: new ObjectId(_id.toString())})
         const thisUserHobbies = Hobbies[0].hobby.join(', ')
-        console.log('This user hobbies = ',thisUserHobbies)
+        // console.log('This user hobbies = ',thisUserHobbies)
 
         //Writing Hobbies as header
         doc.font('fonts/cambriab.ttf')
