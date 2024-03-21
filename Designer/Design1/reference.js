@@ -3,21 +3,24 @@ const schema = require('../../models/reference');
 const {ObjectId} = require('mongodb')
 
 async function renderReference(doc, _id) {
-    //reference title
-    doc.font('fonts/cambriab.ttf')
-        .fillColor('#FFDD00')
-        .fontSize(factorME(13))
-        .text('Reference', {
-            align: 'left',
-            width: factorME(97),
-        })
-
-    //horizontal line, actually by using rectangle
-    doc.rect(doc.x, doc.y, factorME(97), factorME(1))
-        .fillAndStroke('#FFCC00');
-
     try {
         thisUserReference = await schema.find({user_id: new ObjectId(_id.toString())});
+
+        //reference title, reference/s is/are found
+        //horizontal line, actually by using rectangle, reference/s is/are found
+        console.log('this users reference', thisUserReference.length)
+        if (thisUserReference.length){
+            doc.font('fonts/cambriab.ttf')
+                .fillColor('#FFDD00')
+                .fontSize(factorME(13))
+                .text('Reference', {
+                    align: 'left',
+                    width: factorME(97),
+                })
+            doc.rect(doc.x, doc.y, factorME(97), factorME(1))
+                .fillAndStroke('#FFCC00');
+        }
+
         // console.log('this users reference', thisUserReference)
         thisUserReference.forEach(thisRef=>{
 
@@ -54,7 +57,7 @@ async function renderReference(doc, _id) {
             doc.moveDown(1)
         })
     }catch (e) {
-
+        console.log("Error while rendering reference", e)
     }
 
     return doc;

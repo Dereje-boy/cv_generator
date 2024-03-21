@@ -3,22 +3,24 @@ const schema = require('../../models/language');
 const {ObjectId} = require('mongodb')
 
 async function renderLanguage(doc, _id) {
-    //langauge title
-    doc.font('fonts/cambriab.ttf')
-        .fillColor('#FFDD00')
-        .fontSize(factorME(13))
-        .text('Languages', {
-            align: 'left',
-            width: factorME(97),
-        })
-
-    //horizontal line, actually by using rectangle
-    doc.rect(doc.x, doc.y, factorME(97), factorME(1))
-        .fillAndStroke('#FFCC00');
-
     try {
         thisUserLanguages = await schema.find({user_id:new ObjectId(_id.toString())})
         //console.log('this user languages ', thisUserLanguages)
+
+        if (thisUserLanguages.length){
+            //langauge title
+            doc.font('fonts/cambriab.ttf')
+                .fillColor('#FFDD00')
+                .fontSize(factorME(13))
+                .text('Languages', {
+                    align: 'left',
+                    width: factorME(97),
+                })
+
+            //horizontal line, actually by using rectangle
+            doc.rect(doc.x, doc.y, factorME(97), factorME(1))
+                .fillAndStroke('#FFCC00');
+        }
 
         doc.moveDown(.3)
 

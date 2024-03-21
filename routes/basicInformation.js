@@ -71,6 +71,8 @@ let pp_image_path;
 
 router.post("/", upload.single('image'), async (req, res) => {
 
+    console.log("The basic information ", req.body);
+
     firstname = req.body.firstname;
     lastname = req.body.lastname;
     phoneNumber = req.body.phoneNumber;

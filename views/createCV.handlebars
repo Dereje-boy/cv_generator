@@ -1,3 +1,15 @@
-<div class="main-container d-flex justify-content-center align-items-center" style="min-height: 80vh; width: 100%;">
-    <h1 class="card-header">Dear {{email}} I am Creating your CV please wait.....</h1>
+<div class="main-container d-flex flex-column flex-wrap gap-3 justify-content-center align-items-center" style="min-height: 80vh; width: 100%;">
+    <h1 class="card-header text-center">Dear,
+        <span class="text-uppercase text-danger">
+            {{email}}
+        </span>
+        I am Creating your
+        <span class="text-uppercase text-danger">
+            CV
+        </span>
+        please wait.....
+    </h1>
+    <a href="{{pdf_path}}" class="btn btn-success" >Download The PDF</a>
 </div>
+
+<script src="/script/createCV.js"></script>

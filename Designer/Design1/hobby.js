@@ -7,10 +7,11 @@ async function renderHobbies(doc, _id) {
     console.log("rendering hobbies....")
     try{
         const Hobbies = await schema.find({user_id: new ObjectId(_id.toString())})
-        const thisUserHobbies = Hobbies[0].hobby.join(', ')
+        const thisUserHobbies = Hobbies[0]?.hobby.join(', ')
         // console.log('This user hobbies = ',thisUserHobbies)
 
-        //Writing Hobbies as header
+        //Writing Hobbies as header, if hobbies are found
+        if (thisUserHobbies)
         doc.font('fonts/cambriab.ttf')
             .fillColor('#FFDD00')
             .fontSize(factorME(13))
@@ -19,7 +20,8 @@ async function renderHobbies(doc, _id) {
                 width: factorME(97),
             })
 
-        //horizontal line, actually by using rectangle
+        //horizontal line, actually by using rectangle, if hobbies are found
+        if (thisUserHobbies)
         doc.rect(doc.x, doc.y, factorME(97), factorME(1))
             .fillAndStroke('#FFCC00');
 

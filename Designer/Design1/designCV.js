@@ -22,8 +22,10 @@ const {ObjectId} = require("mongodb");
 
 async function designCV(theUser) {
     // Create a document
-    const doc = new PDFDocument({ size: 'A4', margin: 5,bufferPages: true });
-    doc.pipe(fs.createWriteStream(`./pdfs/cv_${theUser.email}.pdf`));
+    const docs = new PDFDocument({ size: 'A4', margin: 5,bufferPages: true });
+    const pdfName=`./public/pdfs/cv_${theUser._id}.pdf`;
+    const theFileWriteStream = fs.createWriteStream(pdfName);
+    docs.pipe(theFileWriteStream);
 
     //the design is filled out with content one after another based on 
     //their z-index or stack
@@ -32,7 +34,7 @@ async function designCV(theUser) {
     //     renderBasicDesignes(doc, false);
     // })
 
-    const basicDesignedDoc = renderBasicDesignes(doc, true);
+    const basicDesignedDoc = renderBasicDesignes(docs, true);
     const basicInformedDoc = await renderBasicInformation(basicDesignedDoc, theUser.email);
     const educationRenderedDoc = await renderEducation(basicInformedDoc, theUser._id);
     const languageRenderedDoc = await renderLanguage(educationRenderedDoc, theUser._id);
@@ -41,49 +43,59 @@ async function designCV(theUser) {
     const experienceRenderedDoc = await renderExperience(hobbiesRenderedDoc, theUser._id);
     // const experienceRenderedDoc = await renderExperience(languageRenderedDoc, theUser._id);
 
+
+    // adding page no. or another to all pages we have
+    const range = experienceRenderedDoc.bufferedPageRange();
+    for (i = range.start, end = range.start + range.count, range.start <= end; i < end; i++) {
+        experienceRenderedDoc.switchToPage(i);
+        experienceRenderedDoc
+            .fillColor('black')
+            .fontSize(factorME(4))
+            .text(`Page ${i + 1} of ${range.count}`,
+                factorME(95),
+                factorME(290)
+            );
+        // renderBasicDesignes(experienceRenderedDoc, false);
+    }
+
+
     //inserting the profile picture on the first page
     //clipping about
     //clipping should be done at the last to make visible of the other document elements
-    doc.switchToPage(doc.bufferedPageRange().start)
+    experienceRenderedDoc.switchToPage(experienceRenderedDoc.bufferedPageRange().start)
 
     //clipping
-    doc.circle(factorME(23), factorME(23), factorME(23)).clip()
+    experienceRenderedDoc.circle(factorME(23), factorME(23), factorME(23)).clip()
 
     //drawing background with white color
-    doc.circle(factorME(23), factorME(23), factorME(23)).fill("#fff");
+    experienceRenderedDoc.circle(factorME(23), factorME(23), factorME(23)).fill("#fff");
 
     //inserting image
 
     try{
-
         email = theUser?.email;
         dbData = await personal_information.findOne({ email })
         theUserInfo = dbData ? dbData : {
             pp_image_path:'./images/male.jpg'
         }
-        theUserInfo.pp_image_path?theUserInfo.pp_image_path: './images/male.jpg'
-        doc.image(
+        console.log(theUserInfo.pp_image_path);
+        theUserInfo.pp_image_path = theUserInfo.pp_image_path?theUserInfo.pp_image_path: './images/male.jpg'
+        experienceRenderedDoc.image(
             theUserInfo.pp_image_path?'./public/'+theUserInfo.pp_image_path:
-                './images/male.jpg', 0, 0,
+                '/images/male.jpg', 0, 0,
             {
             fit: [factorME(46), factorME(46)]
         });
     }catch (e) {
         console.log('Error while inserting the pp image ', e)
-        doc.image('./images/male.jpg', 0, 0, {
+        experienceRenderedDoc.image('./images/male.jpg', 0, 0, {
             fit: [factorME(46), factorME(46)]
         });
 
     }
-    //adding page no. or another to all pages we have
-    // const range = doc.bufferedPageRange();
-    //     // for (i = range.start, end = range.start + range.count, range.start <= end; i < end; i++) {
-    //     //     doc.switchToPage(i);
-    //     //     doc.text(`Page ${i + 1} of ${range.count}`);
-    //     //         renderBasicDesignes(doc, false);
-    //     // }
-
     experienceRenderedDoc.end();
+
+    return pdfName;
 }
 
 module.exports = designCV;

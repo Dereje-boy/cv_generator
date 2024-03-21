@@ -9,7 +9,7 @@ const Router = express.Router();
 Router.get('/', async (req, res) => {
     //console.log(req.session.message);
     try {
-        const references = await schema.find();
+        const references = await schema.find({ user_id: res.theUser._id });
         let referencesData = [];
         for (let i = 0; i < references.length; i++) {
 

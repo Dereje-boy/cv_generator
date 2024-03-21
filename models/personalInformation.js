@@ -58,6 +58,7 @@ const PI_schema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         minlength: 2,
+        maxlength:300
     },
     pp_image_path: {
         type: String,
