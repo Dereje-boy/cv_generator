@@ -12,15 +12,15 @@ const userSchema = require('./models/user');
 
 //Routes
 const routerBasicInformation = require('./routes/basicInformation');
-const experience = require('/routes/experience');
-const education = require('/routes/education');
-const languages = require('/routes/languages');
-const reference = require('/routes/reference');
-const hobbies = require('/routes/hobbies');
-const login = require('/routes/login')
-const signup = require('/routes/signup');
-const dashboard = require('/routes/dashboard')
-const createCV = require('/routes/createCV')
+const experience = require('./routes/experience');
+const education = require('./routes/education');
+const languages = require('./routes/languages');
+const reference = require('./routes/reference');
+const hobbies = require('./routes/hobbies');
+const login = require('./routes/login')
+const signup = require('./routes/signup');
+const dashboard = require('./routes/dashboard')
+const createCV = require('./routes/createCV')
 
 //middlewares
 const verifier = require('./middlewares/verify');
