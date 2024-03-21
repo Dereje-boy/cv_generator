@@ -11,16 +11,16 @@ const session = require('express-session');
 const userSchema = require('./models/user');
 
 //Routes
-const routerBasicInformation = require('./routes/basicInformation');
-const experience = require('./routes/experience');
-const education = require('./routes/education');
-const languages = require('./routes/languages');
-const reference = require('./routes/reference');
-const hobbies = require('./routes/hobbies');
-const login = require('./routes/login')
-const signup = require('./routes/signup');
-const dashboard = require('./routes/dashboard')
-const createCV = require('./routes/createCV')
+// const routerBasicInformation = require('./routes/basicInformation');
+// const experience = require('./routes/experience');
+// const education = require('./routes/education');
+// const languages = require('./routes/languages');
+// const reference = require('./routes/reference');
+// const hobbies = require('./routes/hobbies');
+// const login = require('./routes/login')
+// const signup = require('./routes/signup');
+// const dashboard = require('./routes/dashboard')
+// const createCV = require('./routes/createCV')
 
 //middlewares
 const verifier = require('./middlewares/verify');
@@ -79,16 +79,16 @@ app.use(session({
 }));
 
 //============Routing
-app.use('/basicInformation', verifier, routerBasicInformation);
-app.use('/experience', verifier, experience);
-app.use('/education', verifier, education);
-app.use('/languages', verifier, languages);
-app.use('/reference', verifier, reference);
-app.use('/hobbies', verifier, hobbies);
-app.use('/dashboard', verifier, dashboard);
-app.use('/createCv', verifier, createCV);
-app.use('/login', login);
-app.use('/signup', signup);
+// app.use('/basicInformation', verifier, routerBasicInformation);
+// app.use('/experience', verifier, experience);
+// app.use('/education', verifier, education);
+// app.use('/languages', verifier, languages);
+// app.use('/reference', verifier, reference);
+// app.use('/hobbies', verifier, hobbies);
+// app.use('/dashboard', verifier, dashboard);
+// app.use('/createCv', verifier, createCV);
+// app.use('/login', login);
+// app.use('/signup', signup);
 //use session to pass information while redirection
 
 
