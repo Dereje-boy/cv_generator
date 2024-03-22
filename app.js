@@ -13,16 +13,16 @@ const path = require('path');
 const userSchema = require('./models/user');
 
 //Routes
-const routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation.js'));
-const experience = require(path.join(__dirname,'/routes/experience.js'));
-const education = require(path.join(__dirname,'/routes/education.js'));
-const languages = require(path.join(__dirname,'/routes/languages.js'));
-const reference = require(path.join(__dirname,'/routes/reference.js'));
-const hobbies = require(path.join(__dirname,'/routes/hobbies.js'));
-const login = require(path.join(__dirname,'/routes/login.js'))
-const signup = require(path.join(__dirname,'/routes/signup.js'));
-const dashboard = require(path.join(__dirname,'/routes/dashboard.js'))
-const createCV = require(path.join(__dirname,'/routes/createCV.js'))
+const routerBasicInformation = require('./routes/basicInformation.js');
+const experience = require('./routes/experience.js');
+const education = require('./routes/education.js');
+const languages = require('./routes/languages.js');
+const reference = require('./routes/reference.js');
+const hobbies = require('./routes/hobbies.js');
+const login = require('./routes/login.js');
+const signup = require('./routes/signup.js');
+const dashboard = require('./routes/dashboard.js');
+const createCV = require('./routes/createCV.js');
 
 //middlewares
 const verifier = require('./middlewares/verify');
