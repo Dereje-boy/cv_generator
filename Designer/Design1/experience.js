@@ -82,14 +82,14 @@ async function renderExperience(doc, _id) {
 
             //write company name
             doc.font('fonts/cambriab.ttf')
-                .fillColor('black')
+                .fillColor('#005DFF')
                 .fontSize(factorME(4))
                 .text(
-                    thisExp.companyName.toUpperCase(),
+                    "At: "+thisExp.companyName.toUpperCase(),
                     doc.x,
                     doc.y+doc.heightOfString(facilitateDate(thisExp.startDate, thisExp.endDate))*.5,
                     {
-                    align: 'center',
+                    align: 'left',
                     width: factorME(98)
                 })
 
@@ -107,7 +107,7 @@ async function renderExperience(doc, _id) {
                     doc.y+doc.heightOfString(thisExp.companyName.toUpperCase())*.5,
                     {
                     width: factorME(95),
-                    align: 'center'
+                    align: 'left'
                 })
 
             //heightOfString text

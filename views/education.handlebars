@@ -14,10 +14,11 @@
     }
 </style>
 
-<div class="edu-container w-100 border border-primary p-2 d-flex gap-2 flex-wrap">
+<div class="edu-container w-100 d-flex gap-2 flex-lg-row flex-column">
 
 
-    <div class="left-container flex-grow-1 min-h-100 border border-success d-flex flex-column gap-3 p-3">
+    <div class="left-container flex-grow-1 min-h-100 border border-primary d-flex flex-column gap-3 p-2">
+
         <h3 class="w-100 text-center text-primary fw-bold">Your Added
             Educations</h3>
 
@@ -25,13 +26,13 @@
         {{#each thisEdu}}
         <div class="one-added-edu card w-100 p-2">
             <div class="card-header">
-                <h5>{{titleOfDocument}}</h5>
+                <h5 class="text-capitalize">{{titleOfDocument}}</h5>
             </div>
-            <div class="card-body">
-                <h5 class="ps-3 card-title">{{nameOfUniversity}}</h5>
-                <h5 class="ps-3 card-title">{{yearOfGraduation}}</h5>
-                <h5 class="ps-3 card-title">{{CGPA}}</h5>
-                <button id="{{_id}}" type="button" class=" btn btn-danger">Delete </button>
+            <div class="card-body d-flex flex-column">
+                <h5 class="ps-3 card-title text-capitalize">{{nameOfUniversity}}</h5>
+                <h5 class="ps-3 card-title text-capitalize">{{yearOfGraduation}}</h5>
+                <h5 class="ps-3 card-title text-capitalize">{{CGPA}}</h5>
+                <button id="{{_id}}" type="button" class="px-4 btn btn-danger text-white align-self-center">Delete </button>
             </div>
 
         </div>
@@ -40,7 +41,7 @@
     </div>
 
     {{!-- right container --}}
-    <div class="right-container flex-grow-1 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
+    <div class="right-container flex-grow-1 min-h-100 border border-warning d-flex flex-column gap-3 p-2">
         <h3 class="w-100 text-center text-warning fw-bold">Add Your New Education</h3>
 
 
@@ -50,7 +51,7 @@
 
         </p>
 
-        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="education">
+        <form class="container w-100 w-lg-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="education">
             <div class="form-group w-100">
                 <label for="universityName" class="control-label fs-4">Name of University or College</label>
                 <input type="text" name="universityName" class="form-control fw-bold p-2 fs-5" required
@@ -72,7 +73,7 @@
                     class="form-control fw-bold p-2 fs-5" required value="{{cgpa}}" />
             </div>
             <div class="form-group w-50">
-                <input type="submit" value="Add Education" class="btn btn-primary align-self-center w-100 fs-5">
+                <input type="submit" value="Add Education" class="btn btn-warning font-bold align-self-center w-100 fs-5">
             </div>
         </form>
 

@@ -31,7 +31,7 @@ userForm.addEventListener('submit', (e) => {
 
             //status === false if there isno error, > error.status === false
             if (status === false)
-                window.location.href = '/dashboard'
+                window.location.href = '/'
 
             $('#result-message').text(message);
 

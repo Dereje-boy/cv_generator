@@ -16,7 +16,7 @@ Router.get('', async (req, res) => {
         if (err) return res.send('logging in....')
         //console.log(theVerifiedUser);
         req.session.theUser = theVerifiedUser;
-        res.redirect('/dashboard')
+        res.redirect('/')
     })
 })
 

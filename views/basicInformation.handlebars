@@ -5,17 +5,18 @@
     }
 </style>
 
-<div class=" d-flex flex-wrap ">
-    <p class="fs-3 text-primary text-wrap text-capitalize text-center w-100 fw-bold ">
-        {{message}}
-    </p>
+<div class="d-flex flex-column flex-md-row w-100">
 
-    <div class="">
+    <div class="w-100 w-md-50 ">
         <h3 class="text-primary fw-bold text-uppercase text-center ">Add Your Personal Information</h3>
+        <p class="fs-5 text-primary text-wrap text-capitalize text-center w-100 fw-bold p-2">
+            {{message}}
+        </p>
         <img src="/Images/personal_information.png" alt="" class="w-100">
     </div>
+
     {{#with pi}}
-    <form class="container w-50 h-100 d-flex flex-column align-items-center gap-3" method="post"
+    <form class="w-100 w-md-50 container d-flex flex-column align-items-center gap-3 " method="post"
         action="basicInformation" enctype="multipart/form-data">
         <div class="form-group w-75">
             <label for="firstname" class="control-label fs-4"> Firstname</label>
@@ -72,7 +73,6 @@
         </div>
     </form>
     {{/with }}
-    <img id="image" src="{{pp_image_path}}" alt="" class="" width="100%" style="border-radius:20px;">
 
 </div>
 
