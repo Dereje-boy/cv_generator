@@ -23,7 +23,7 @@ const languages = require('./routes/languages.js');
 const reference = require('./routes/reference.js');
 const hobbies = require('./routes/hobbies.js');
 const login = require('./routes/login.js');
-const signup = require('./routes/signup.js');
+const signup = require('./routes/signup.JS');
 const dashboard = require('./routes/dashboard.js');
 const createCV = require('./routes/createCV.js');
 
