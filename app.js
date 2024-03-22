@@ -11,41 +11,19 @@ const path = require('path');
 
 //schema
 const userSchema = require('./models/user');
-let routerBasicInformation;
-let experience;
-let education;
-let languages;
-let reference;
-let hobbies;
-let login;
-let signup;
-let dashboard;
-let createCV;
-routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation'));
-experience = require(path.join(__dirname,'/routes/experience'));
-education = require(path.join(__dirname,'/routes/education'));
-languages = require(path.join(__dirname,'/routes/languages'));
-reference = require(path.join(__dirname,'/routes/reference'));
-hobbies = require(path.join(__dirname,'/routes/hobbies'));
-login = require(path.join(__dirname,'/routes/login'))
-signup = require(path.join(__dirname,'/routes/signup'));
-dashboard = require(path.join(__dirname,'/routes/dashboard'))
 
 //Routes
-try {
-    routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation'));
-    experience = require(path.join(__dirname,'/routes/experience'));
-    education = require(path.join(__dirname,'/routes/education'));
-    languages = require(path.join(__dirname,'/routes/languages'));
-    reference = require(path.join(__dirname,'/routes/reference'));
-    hobbies = require(path.join(__dirname,'/routes/hobbies'));
-    login = require(path.join(__dirname,'/routes/login'))
-    signup = require(path.join(__dirname,'/routes/signup'));
-    dashboard = require(path.join(__dirname,'/routes/dashboard'))
-    createCV = require(path.join(__dirname,'/routes/createCV'))
-}catch (e) {
-    console.log("unable to require the routes modules", e);
-}
+const routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation.js'));
+const experience = require(path.join(__dirname,'/routes/experience.js'));
+const education = require(path.join(__dirname,'/routes/education.js'));
+const languages = require(path.join(__dirname,'/routes/languages.js'));
+const reference = require(path.join(__dirname,'/routes/reference.js'));
+const hobbies = require(path.join(__dirname,'/routes/hobbies.js'));
+const login = require(path.join(__dirname,'/routes/login.js'))
+const signup = require(path.join(__dirname,'/routes/signup.js'));
+const dashboard = require(path.join(__dirname,'/routes/dashboard.js'))
+const createCV = require(path.join(__dirname,'/routes/createCV.js'))
+
 //middlewares
 const verifier = require('./middlewares/verify');
 
