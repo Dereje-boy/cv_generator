@@ -7,21 +7,36 @@ const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
+const path = require('path');
+
 //schema
 const userSchema = require('./models/user');
+let routerBasicInformation;
+let experience;
+let education;
+let languages;
+let reference;
+let hobbies;
+let login;
+let signup;
+let dashboard;
+let createCV;
 
 //Routes
-const routerBasicInformation = require('./routes/basicInformation');
-const experience = require('/routes/experience');
-const education = require('/routes/education');
-const languages = require('/routes/languages');
-const reference = require('/routes/reference');
-const hobbies = require('/routes/hobbies');
-const login = require('/routes/login')
-const signup = require('/routes/signup');
-const dashboard = require('/routes/dashboard')
-const createCV = require('/routes/createCV')
-
+try {
+    routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation'));
+    experience = require(path.join(__dirname,'/routes/experience'));
+    education = require(path.join(__dirname,'/routes/education'));
+    languages = require(path.join(__dirname,'/routes/languages'));
+    reference = require(path.join(__dirname,'/routes/reference'));
+    hobbies = require(path.join(__dirname,'/routes/hobbies'));
+    login = require(path.join(__dirname,'/routes/login'))
+    signup = require(path.join(__dirname,'/routes/signup'));
+    dashboard = require(path.join(__dirname,'/routes/dashboard'))
+    createCV = require(path.join(__dirname,'/routes/createCV'))
+}catch (e) {
+    console.log("unable to require the routes modules", e);
+}
 //middlewares
 const verifier = require('./middlewares/verify');
 
@@ -36,7 +51,7 @@ mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mong
         //console.log(success);
     }).
     catch(e => {
-        console.log('Failed to connect to MongoDB\n');
+        console.log('Failed to connect to MongoDB',e);
     });
 
 mongoose.connection.on('connected', async () => {
@@ -80,16 +95,20 @@ app.use(session({
 }));
 
 //============Routing
-app.use('/basicInformation', verifier, routerBasicInformation);
-app.use('/experience', verifier, experience);
-app.use('/education', verifier, education);
-app.use('/languages', verifier, languages);
-app.use('/reference', verifier, reference);
-app.use('/hobbies', verifier, hobbies);
-app.use('/dashboard', verifier, dashboard);
-app.use('/createCv', verifier, createCV);
-app.use('/login', login);
-app.use('/signup', signup);
+try {
+    app.use('/basicInformation', verifier, routerBasicInformation);
+    app.use('/experience', verifier, experience);
+    app.use('/education', verifier, education);
+    app.use('/languages', verifier, languages);
+    app.use('/reference', verifier, reference);
+    app.use('/hobbies', verifier, hobbies);
+    app.use('/dashboard', verifier, dashboard);
+    app.use('/createCv', verifier, createCV);
+    app.use('/login', login);
+    app.use('/signup', signup);
+}catch(e){
+    console.log("Error found while using different routes",e)
+}
 
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
