@@ -11,6 +11,9 @@ const path = require('path');
 
 //schema
 const userSchema = require('./models/user');
+//middlewares
+const verifier = require('./middlewares/verify');
+
 
 //Routes
 const routerBasicInformation = require('./routes/basicInformation.js');
@@ -20,12 +23,9 @@ const languages = require('./routes/languages.js');
 const reference = require('./routes/reference.js');
 const hobbies = require('./routes/hobbies.js');
 const login = require('./routes/login.js');
-const signup = require('./routes/signup.js');
+// const signup = require('./routes/signup.js');
 const dashboard = require('./routes/dashboard.js');
 const createCV = require('./routes/createCV.js');
-
-//middlewares
-const verifier = require('./middlewares/verify');
 
 //check the user exist for the token we have on client side
 const checkUserExist = require('./model/user/checkUserExist');
@@ -91,7 +91,7 @@ app.use('/hobbies', verifier, hobbies);
 app.use('/dashboard', verifier, dashboard);
 app.use('/createCv', verifier, createCV);
 app.use('/login', login);
-app.use('/signup', signup);
+// app.use('/signup', signup);
 
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
