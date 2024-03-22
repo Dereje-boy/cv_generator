@@ -21,6 +21,15 @@ let login;
 let signup;
 let dashboard;
 let createCV;
+routerBasicInformation = require(path.join(__dirname,'./routes/basicInformation'));
+experience = require(path.join(__dirname,'/routes/experience'));
+education = require(path.join(__dirname,'/routes/education'));
+languages = require(path.join(__dirname,'/routes/languages'));
+reference = require(path.join(__dirname,'/routes/reference'));
+hobbies = require(path.join(__dirname,'/routes/hobbies'));
+login = require(path.join(__dirname,'/routes/login'))
+signup = require(path.join(__dirname,'/routes/signup'));
+dashboard = require(path.join(__dirname,'/routes/dashboard'))
 
 //Routes
 try {
@@ -95,20 +104,16 @@ app.use(session({
 }));
 
 //============Routing
-try {
-    app.use('/basicInformation', verifier, routerBasicInformation);
-    app.use('/experience', verifier, experience);
-    app.use('/education', verifier, education);
-    app.use('/languages', verifier, languages);
-    app.use('/reference', verifier, reference);
-    app.use('/hobbies', verifier, hobbies);
-    app.use('/dashboard', verifier, dashboard);
-    app.use('/createCv', verifier, createCV);
-    app.use('/login', login);
-    app.use('/signup', signup);
-}catch(e){
-    console.log("Error found while using different routes",e)
-}
+app.use('/basicInformation', verifier, routerBasicInformation);
+app.use('/experience', verifier, experience);
+app.use('/education', verifier, education);
+app.use('/languages', verifier, languages);
+app.use('/reference', verifier, reference);
+app.use('/hobbies', verifier, hobbies);
+app.use('/dashboard', verifier, dashboard);
+app.use('/createCv', verifier, createCV);
+app.use('/login', login);
+app.use('/signup', signup);
 
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
