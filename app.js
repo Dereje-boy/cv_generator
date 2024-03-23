@@ -105,7 +105,7 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
         jwt.verify(token, 'my-secret-key', async (error, theUser) => {
             //unable to verify the cookie so render login page
             if (error)
-                return res.render("index", { email });
+                return res.render("index", { email, title:"CV GENERATOR" });
 
             //checking the user with verified email address exist
             const userExist = checkUserExist.check(theUser.email).then(userExist => {
@@ -114,14 +114,14 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
 
                 email = userExist != null ?
                     userExist.email : ""
-                res.render("index", { email });
+                res.render("index", { email, title:"CV GENERATOR" });
 
             }).catch(e => {
-                res.render("index", { email });
+                res.render("index", { email, title:"CV GENERATOR" });
             })
         })
     } else {
-        res.render("index", { email });
+        res.render("index", { email, title:"CV GENERATOR" });
     }
 })
 
