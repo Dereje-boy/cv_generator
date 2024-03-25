@@ -32,7 +32,8 @@ const checkUserExist = require('./model/user/checkUserExist');
 
 //instantiating mongo
 // Connect to MongoDB database
-//localdb = mongodb://localhost:27017/cvGenerator
+
+//Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
 mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
     then(success => {
         //console.log(success);
@@ -40,6 +41,15 @@ mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mong
     catch(e => {
         console.log('Failed to connect to MongoDB',e);
     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+// mongoose.connect('mongodb://localhost:27017/cvGenerator').
+//     then(success => {
+//         //console.log(success);
+//     }).
+//     catch(e => {
+//         console.log('Failed to connect to MongoDB',e);
+//     });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -105,7 +115,7 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
         jwt.verify(token, 'my-secret-key', async (error, theUser) => {
             //unable to verify the cookie so render login page
             if (error)
-                return res.render("index", { email });
+                return res.render("index", { email, title:"CV GENERATOR" });
 
             //checking the user with verified email address exist
             const userExist = checkUserExist.check(theUser.email).then(userExist => {
@@ -114,14 +124,14 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
 
                 email = userExist != null ?
                     userExist.email : ""
-                res.render("index", { email });
+                res.render("index", { email, title:"CV GENERATOR" });
 
             }).catch(e => {
-                res.render("index", { email });
+                res.render("index", { email, title:"CV GENERATOR" });
             })
         })
     } else {
-        res.render("index", { email });
+        res.render("index", { email, title:"CV GENERATOR" });
     }
 })
 
