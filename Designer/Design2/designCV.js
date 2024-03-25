@@ -21,29 +21,34 @@ const {ObjectId} = require("mongodb");
  */
 
 async function designCV(theUser) {
-
-    console.log("Designing the pdf with DESIGN 1");
+    console.log("Designing the pdf with DESIGN 2");
 
     // Create a document
-    const docs = new PDFDocument({ size: 'A4', margin: 5,bufferPages: true });
-    const pdfName=`./public/pdfs/cv_${theUser._id}.pdf`;
+    const docs = new PDFDocument({ size: 'A4', margin: 10,bufferPages: true });
+    const pdfName=`./public/pdfs/cv_${theUser._id}2.pdf`;
     const theFileWriteStream = fs.createWriteStream(pdfName);
     docs.pipe(theFileWriteStream);
 
     //the design is filled out with content one after another based on 
     //their z-index or stack
 
-    // doc.on('pageAdded', (e) => {
-    //     renderBasicDesignes(doc, false);
+    // docs.on('pageAdded', (e) => {
+    //     // renderBasicDesignes(docs, false);
+    //     //left
+    //     docs.rect(0, 0, factorME(67), factorME(297))
+    //         // .fill('#E3D5C8');
     // })
 
     const basicDesignedDoc = renderBasicDesignes(docs, true);
     const basicInformedDoc = await renderBasicInformation(basicDesignedDoc, theUser.email);
-    const educationRenderedDoc = await renderEducation(basicInformedDoc, theUser._id);
-    const languageRenderedDoc = await renderLanguage(educationRenderedDoc, theUser._id);
-    const referenceRenderedDoc = await renderReference(languageRenderedDoc, theUser._id);
-    const hobbiesRenderedDoc = await renderHobbies(referenceRenderedDoc, theUser._id);
-    const experienceRenderedDoc = await renderExperience(hobbiesRenderedDoc, theUser._id);
+    const referenceRendered = await renderReference(basicInformedDoc, theUser._id);
+    const languageRendered = await renderLanguage(referenceRendered, theUser._id);
+    const hobbyRendered = await renderHobbies(languageRendered, theUser._id);
+    const educationRendered = await renderEducation(hobbyRendered, theUser._id);
+    const experienceRenderedDoc = await renderExperience(educationRendered, theUser._id);
+
+    // const hobbiesRenderedDoc = await renderHobbies(referenceRenderedDoc, theUser._id);
+    // const experienceRenderedDoc = await renderExperience(hobbiesRenderedDoc, theUser._id);
     // const experienceRenderedDoc = await renderExperience(languageRenderedDoc, theUser._id);
 
 
@@ -53,10 +58,14 @@ async function designCV(theUser) {
         experienceRenderedDoc.switchToPage(i);
         experienceRenderedDoc
             .fillColor('black')
+            .font('fonts/segoeui/segoeuib.ttf')
             .fontSize(factorME(4))
             .text(`Page ${i + 1} of ${range.count}`,
-                factorME(95),
-                factorME(290)
+                factorME(200-experienceRenderedDoc.widthOfString("page 1 of 1")),
+                factorME(287),
+                {
+                    align:'right'
+                }
             );
         // renderBasicDesignes(experienceRenderedDoc, false);
     }
@@ -68,10 +77,10 @@ async function designCV(theUser) {
     experienceRenderedDoc.switchToPage(experienceRenderedDoc.bufferedPageRange().start)
 
     //clipping
-    experienceRenderedDoc.circle(factorME(23), factorME(23), factorME(23)).clip()
+    experienceRenderedDoc.circle(factorME(11+23), factorME(7+23), factorME(23)).clip()
 
     //drawing background with white color
-    experienceRenderedDoc.circle(factorME(23), factorME(23), factorME(23)).fill("#fff");
+    experienceRenderedDoc.circle(factorME(11+23), factorME(7+23), factorME(23)).fill("#fff");
 
     //inserting image
 
@@ -82,20 +91,19 @@ async function designCV(theUser) {
             pp_image_path:'./images/male.jpg'
         }
         console.log(theUserInfo.pp_image_path);
-        theUserInfo.pp_image_path = theUserInfo.pp_image_path?theUserInfo.pp_image_path: './images/male.jpg'
-        experienceRenderedDoc.image(
-            theUserInfo.pp_image_path?'./public/'+theUserInfo.pp_image_path:
-                '/images/male.jpg', 0, 0,
+        theUserInfo.pp_image_path = theUserInfo.pp_image_path.endsWith('undefined')?'./Images/male.jpg':'./public/'+theUserInfo.pp_image_path
+        experienceRenderedDoc.image(theUserInfo.pp_image_path, factorME(11), factorME(7),
             {
             fit: [factorME(46), factorME(46)]
         });
     }catch (e) {
-        console.log('Design 1: Error while inserting the pp image ', e)
-        experienceRenderedDoc.image('./images/male.jpg', 0, 0, {
+        console.log('Design 2: Error while inserting the pp image ', e)
+        experienceRenderedDoc.image('./Images/male.jpg', 0, 0, {
             fit: [factorME(46), factorME(46)]
         });
 
     }
+
     experienceRenderedDoc.end();
 
     return pdfName;
