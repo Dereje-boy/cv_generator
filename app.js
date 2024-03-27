@@ -39,22 +39,22 @@ const {response} = require("express");
 // Connect to MongoDB database
 
 //Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
-// mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
-//     then(success => {
-//         //console.log(success);
-//     }).
-//     catch(e => {
-//         console.log('Failed to connect to MongoDB',e);
-//     });
-
-//localdb = mongodb://localhost:27017/cvGenerator
-mongoose.connect('mongodb://localhost:27017/cvGenerator').
+mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
     then(success => {
         //console.log(success);
     }).
     catch(e => {
         console.log('Failed to connect to MongoDB',e);
     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+// mongoose.connect('mongodb://localhost:27017/cvGenerator').
+//     then(success => {
+//         //console.log(success);
+//     }).
+//     catch(e => {
+//         console.log('Failed to connect to MongoDB',e);
+//     });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -144,7 +144,6 @@ app.get('/blogs',(req,res)=>{
     res.render('blogs');
 })
 
-/*
 app.get('/b2',async (req,res)=>{
     // const b2 = new B2({
     //     accountID:'0053fb7f01f1e6d0000000001',
@@ -191,7 +190,6 @@ app.get('/b2',async (req,res)=>{
 
 
 })
-*/
 
 async function downloadFile(b2,filename){
     console.log(filename)
