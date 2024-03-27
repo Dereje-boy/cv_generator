@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
+const B2 =require('backblaze-b2');
+const fs = require('fs')
+
 const path = require('path');
 
 //schema
@@ -29,27 +32,28 @@ const createCV = require('./routes/createCV.js');
 
 //check the user exist for the token we have on client side
 const checkUserExist = require('./model/user/checkUserExist');
+const {response} = require("express");
 
 //instantiating mongo
 // Connect to MongoDB database
 
 //Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
-mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
-    then(success => {
-        //console.log(success);
-    }).
-    catch(e => {
-        console.log('Failed to connect to MongoDB',e);
-    });
-
-//localdb = mongodb://localhost:27017/cvGenerator
-// mongoose.connect('mongodb://localhost:27017/cvGenerator').
+// mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
 //     then(success => {
 //         //console.log(success);
 //     }).
 //     catch(e => {
 //         console.log('Failed to connect to MongoDB',e);
 //     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+mongoose.connect('mongodb://localhost:27017/cvGenerator').
+    then(success => {
+        //console.log(success);
+    }).
+    catch(e => {
+        console.log('Failed to connect to MongoDB',e);
+    });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -135,6 +139,149 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
     }
 })
 
+app.get('/b2',async (req,res)=>{
+    // const b2 = new B2({
+    //     accountID:'0053fb7f01f1e6d0000000001',
+    //     applicationKey:'K005vWj05UcmB6OlYEOMebd6BqAGtuo'
+    // })
+
+    res.send('welcome to b2')
+
+    const b2 = new B2({
+        applicationKeyId: '0053fb7f01f1e6d0000000002', // or accountId: 'accountId'
+        applicationKey: 'K005rcBFrawVI/hD+v5eCxce9CO4ovA' // or masterApplicationKey
+    });
+
+    // GetBucket(b2,res)
+    uploadFile(b2, res)
+
+    /*
+    try{
+        await b2.authorize();
+        b2.listFileNames({
+            bucketId: 'a31f5b577f7061bf81ee061d',
+            maxFileCount: 100 // Adjust as needed
+        }).then(response => {
+            response.data.files.forEach(async thisFile=>{
+                console.log('Files in bucket:',  thisFile.fileName);
+                await downloadFile(b2,  thisFile.fileName)
+                })
+        }).catch(err => {
+            console.error('Error listing files:', err);
+        });
+
+        // const files = await b2.listFileNames({
+        //     bucketId: 'a31f5b577f7061bf81ee061d',
+        //     maxFileCount: 100,
+        //     delimiter: ',',
+        //     prefix: ''
+        //     // ...common arguments (optional)
+        // });
+        // console.log(files)
+    }catch (e) {
+        console.log('Error while getting all files in the bucket,\n', e)
+    }
+    */
+
+
+})
+
+async function downloadFile(b2,filename){
+    console.log(filename)
+    try{
+        const response = await b2.downloadFileByName({
+            bucketName: 'cv-generator',
+            fileName: filename,
+        })
+        // Assuming response.data is a Buffer
+        const fileContent = response.data;
+        // Define content type for PDF
+        const contentType = 'application/pdf';
+        // You can save the PDF file locally or do other operations with it
+        fs.writeFileSync(filename+'.pdf', fileContent);
+        console.log('PDF file downloaded successfully');
+
+    }catch (e) {
+        console.log('unable to download a file',e)
+    }
+
+    // b2.downloadFileByName({
+    //     filename:filename,
+    //     bucketName:'cv-generator'
+    // }).then(response=>{
+    //     console.log("File name: ",filename)
+    //     console.log("File data: ",response.data)
+    // }).catch(error=>{
+    //     console.error('Error downloading file:', err);
+    // })
+}
+
+async function GetBucket(b2,res) {
+    b2.authorize().then(async ()=> {
+            console.log('authorized')
+            // res.send('Authorized...')
+            try {
+                let response = await b2.getBucket({ bucketName: 'cv-generator' });
+                console.log(response.data);
+                res.send('working..')
+            } catch (err) {
+                console.log('Error getting bucket:', err);
+                res.send('Error getting bucket:', err)
+            }
+        }
+    ).catch(err=>{
+        console.log('unauthorized ',err)
+        res.send('unauthorized ',err)
+    })
+}
+
+async function uploadFile(b2, res){
+
+    b2.authorize().then(()=>{
+        console.log('authorized, Now uploading file...')
+
+        b2.getUploadUrl({
+            bucketId: 'a31f5b577f7061bf81ee061d'
+        }).then(response=>{
+            console.log('uploadUrl: ', response.data.uploadUrl);
+            console.log('authorizationToken: ', response.data.authorizationToken);
+            b2.uploadFile({
+                filename:'cv_derejeg35@gmail.com.pdf',
+                data:fs.readFileSync('cv_derejeg35@gmail.com.pdf'),
+                contentType:'application/pdf',
+                bucketName:'cv-generator',
+                uploadUrl:response.data.uploadUrl,
+                headers:{
+                    'content-type':'application/pdf'
+                },
+                uploadAuthToken:response.data.authorizationToken
+            }).then(response => {
+                console.log('File uploaded successfully:', response.data);
+                const fileId = response.data.fileId;
+
+            }).catch(err => {
+                console.error('Upload failed:', err);
+            });
+        }).catch(e=>{
+            console.log("unable to get upload url", e);
+        })
+    }).catch(e=>{
+        console.log('unauthorized, Unable to upload file....')
+    })
+    /*
+    // upload file
+    await b2.uploadFile({
+        uploadUrl: 'uploadUrl',
+        uploadAuthToken: 'uploadAuthToken',
+        fileName: 'fileName',
+        data: 'data', // this is expecting a Buffer, not an encoded string,
+        onUploadProgress: (event) => {
+            console.log('event coming')
+        }// || null // progress monitoring
+        });  // returns promise
+    */
+}
+
 function createCV1() {
     // Create a document
     const doc = new PDFDocument({ size: 'A4' });
@@ -215,4 +362,4 @@ function pdfCreator(res) {
     doc.end();
 }
 
-app.listen(3000, () => console.log("The server started running on port 3000"))
+app.listen(23001, () => console.log("The server started running on port 3000"))
