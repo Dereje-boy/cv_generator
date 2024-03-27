@@ -9,6 +9,7 @@ const session = require('express-session');
 
 const B2 =require('backblaze-b2');
 const fs = require('fs')
+const axios = require('axios');
 
 const path = require('path');
 
@@ -139,6 +140,11 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
     }
 })
 
+app.get('/blogs',(req,res)=>{
+    res.render('blogs');
+})
+
+/*
 app.get('/b2',async (req,res)=>{
     // const b2 = new B2({
     //     accountID:'0053fb7f01f1e6d0000000001',
@@ -185,6 +191,7 @@ app.get('/b2',async (req,res)=>{
 
 
 })
+*/
 
 async function downloadFile(b2,filename){
     console.log(filename)
@@ -245,23 +252,29 @@ async function uploadFile(b2, res){
         }).then(response=>{
             console.log('uploadUrl: ', response.data.uploadUrl);
             console.log('authorizationToken: ', response.data.authorizationToken);
-            b2.uploadFile({
-                filename:'cv_derejeg35@gmail.com.pdf',
-                data:fs.readFileSync('cv_derejeg35@gmail.com.pdf'),
-                contentType:'application/pdf',
-                bucketName:'cv-generator',
-                uploadUrl:response.data.uploadUrl,
-                headers:{
-                    'content-type':'application/pdf'
-                },
-                uploadAuthToken:response.data.authorizationToken
-            }).then(response => {
-                console.log('File uploaded successfully:', response.data);
-                const fileId = response.data.fileId;
 
-            }).catch(err => {
-                console.error('Upload failed:', err);
-            });
+            fileId = '4_za31f5b577f7061bf81ee061d_f1023e422ba581b96_d20240327_m055251_c005_v0501017_t0013_u01711518771769';
+            generateTemporaryUrl(fileId,'0053fb7f01f1e6d0000000002','K005rcBFrawVI/hD+v5eCxce9CO4ovA' );
+
+
+            // b2.uploadFile({
+            //     filename:'cv_derejeg35@gmail.com.pdf',
+            //     data:fs.readFileSync('cv_derejeg35@gmail.com.pdf'),
+            //     contentType:'application/pdf',
+            //     bucketName:'cv-generator',
+            //     uploadUrl:response.data.uploadUrl,
+            //     headers:{
+            //         'content-type':'application/pdf'
+            //     },
+            //     uploadAuthToken:response.data.authorizationToken
+            // }).then(response => {
+            //     console.log('File uploaded successfully:', response.data);
+            //     const fileId = response.data.fileId;
+            //     generateTemporaryUrl(fileId,'0053fb7f01f1e6d0000000002','K005rcBFrawVI/hD+v5eCxce9CO4ovA' )
+            //
+            // }).catch(err => {
+            //     console.error('Upload failed:', err);
+            // });
         }).catch(e=>{
             console.log("unable to get upload url", e);
         })
@@ -281,6 +294,82 @@ async function uploadFile(b2, res){
         });  // returns promise
     */
 }
+
+const generateTemporaryUrl = async (fileId,accountId, applicationKey) => {
+    console.log('== Generating Application Ke ==');
+    try {
+        // Authenticate with Backblaze B2
+
+        const b2 = new B2({
+            applicationKeyId: '0053fb7f01f1e6d0000000002', // or accountId: 'accountId'
+            applicationKey: 'K005rcBFrawVI/hD+v5eCxce9CO4ovA' // or masterApplicationKey
+        });
+
+        b2.authorize().then(async authorized=>{
+            console.log('Authorize response: ', authorized?true:false);
+            const authorizationToken = authorized.data.authorizationToken;
+            const apiUrl = authorized.data.apiUrl;
+
+            console.log("Authorization token :", authorizationToken, "\napiUrl", apiUrl);
+            console.log('url: ', apiUrl+"/file/cv-generator/cv_65f9d22237540f1c49e99e20.pdf?Authorization="+authorizationToken)
+
+            // b2.getDownloadAuthorization({
+            //     bucketId: 'a31f5b577f7061bf81ee061d',
+            //     fileNamePrefix:'',
+            //     validDurationInSeconds:60*60*24*6,
+            //     b2ContentDisposition:'b2ContentDisposition'
+            // }).then(temporaryUrlResponse=>{
+            //
+            //     const temporaryUrl = temporaryUrlResponse.data.downloadAuthorization;
+            //
+            //     console.log('Temporary URL:', temporaryUrlResponse);
+            //     return temporaryUrl;
+            // }).catch(e=>{
+            //     console.log('Unable to get Download Authorization', e);
+            // })
+
+            axios.post(apiUrl + '/b2api/v2/b2_get_download_authorization', {
+                bucketId: 'a31f5b577f7061bf81ee061d',
+                validDurationInSeconds: 60*60*24*6, // Set the validity duration (in seconds) for the temporary URL
+                fileNamePrefix:''
+            }, {
+                headers: {
+                    Authorization: authorizationToken
+                }
+            }).then(temporaryUrlResponse=>{
+                console.log(temporaryUrlResponse);
+            }).catch(e=>{
+                console.log('Unable to get temporaryUrlResponse\n',e);
+            })
+
+        }).catch(e=>{
+            console.log('Un authorized: ', e)
+        })
+
+        // const response = await axios.post('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', {
+        //     accountId: accountId,
+        //     applicationKey: applicationKey
+        // });
+        // const authToken = response.data.authorizationToken;
+        // const apiUrl = response.data.apiUrl;
+
+        // Generate temporary URL for file download
+        // const temporaryUrlResponse = await axios.post(apiUrl + '/b2api/v2/b2_get_download_authorization', {
+        //     fileId: fileId,
+        //     validDurationInSeconds: 3600 // Set the validity duration (in seconds) for the temporary URL
+        // }, {
+        //     headers: {
+        //         Authorization: authToken
+        //     }
+        // });
+        // const temporaryUrl = temporaryUrlResponse.data.downloadAuthorization;
+        //
+        // console.log('Temporary URL:', temporaryUrl);
+        // return temporaryUrl;
+    } catch (error) {
+        // console.error('Error:', error);
+    }
+};
 
 function createCV1() {
     // Create a document

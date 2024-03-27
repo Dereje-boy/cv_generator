@@ -21,6 +21,7 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "b2": "^0.1.11",
     "backblaze-b2": "^1.7.0",
     "backbone": "^1.6.0",
