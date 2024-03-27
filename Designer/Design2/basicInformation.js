@@ -21,11 +21,19 @@ async function renderBasicInformation(doc, email) {
         }
         //console.log('userInfo', theUserInfo);
         
-        // Applicant full name
+        // Applicant firstname
         doc.font('fonts/times/timesbd.ttf')
             .fillColor('#E0D3C6')
             .fontSize(factorME(15))
-            .text(`${theUserInfo.firstname.toUpperCase()} ${theUserInfo.lastname.toUpperCase()}`, factorME(73), factorME(16), {
+            .text(theUserInfo.firstname.toUpperCase(), factorME(73), factorME(2), {
+                align: 'left',
+            })
+
+        // Applicant lastname
+        doc.font('fonts/times/timesbd.ttf')
+            .fillColor('#E0D3C6')
+            .fontSize(factorME(15))
+            .text(theUserInfo.lastname.toUpperCase(), factorME(73), factorME(16), {
                 align: 'left',
             })
 

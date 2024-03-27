@@ -16,11 +16,14 @@ const renderHobbies = require('./hobby');
 const personal_information = require("../../models/personalInformation");
 const {ObjectId} = require("mongodb");
 
+const B2 =require('backblaze-b2');
+
 /**
  * @param theUser used as the reference for naming the pdf and fetching respective data from the db and then to render on the pdf.
  */
 
 async function designCV(theUser) {
+
     console.log("Designing the pdf with DESIGN 2");
 
     // Create a document
@@ -102,11 +105,54 @@ async function designCV(theUser) {
             fit: [factorME(46), factorME(46)]
         });
 
+    }finally{
+
+        experienceRenderedDoc.end();
+
+        uploadFile(pdfName);
+
+        return pdfName;
+
+    }
+}
+
+async function uploadFile(filePath) {
+    try{
+
+        const b2 = new B2({
+            applicationKeyId: '0053fb7f01f1e6d0000000002', // or accountId: 'accountId'
+            applicationKey: 'K005rcBFrawVI/hD+v5eCxce9CO4ovA' // or masterApplicationKey
+        });
+
+        const authorized = await b2.authorize();
+        if (! authorized) throw new Error('Unable to get authorized, b2')
+
+        const uploadUrl = await b2.getUploadUrl({bucketId: 'a31f5b577f7061bf81ee061d'})
+        if (! uploadUrl) throw new Error("Unable to get upload url")
+
+        console.log('uploadUrl: ', uploadUrl.data.uploadUrl);
+        console.log('authorizationToken: ', uploadUrl.data.authorizationToken);
+
+        const filename = filePath.split('/')[filePath.split('/').length-1]
+
+        const uploadResult  = await b2.uploadFile({
+            uploadUrl: uploadUrl.data.uploadUrl,
+            uploadAuthToken: uploadUrl.data.authorizationToken,
+            fileName: filename,
+            data: fs.readFileSync(filePath), // this is expecting a Buffer, not an encoded string,
+            onUploadProgress: (event) => {
+                console.log('onUploadProgress ... ')
+            }
+        });
+        // console.log("Upload Result : ", uploadResult.data)
+
+        //delete file now
+        fs.unlinkSync(filePath);
+
+    }catch (e) {
+        console.log("Error while designing cv and uploading to b2", e);
     }
 
-    experienceRenderedDoc.end();
-
-    return pdfName;
 }
 
 module.exports = designCV;
