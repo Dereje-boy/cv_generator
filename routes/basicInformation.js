@@ -3,6 +3,7 @@ const router = express.Router();
 
 //user defined modules
 const schema = require('../models/personalInformation');
+const mongoose = require('mongoose')
 
 const multer = require("multer");
 
@@ -43,7 +44,7 @@ router.get("/", async (req, res) => {
             alreadyExist: PI[0] ? true : false,
             pp_image_path:PI[0]?.pp_image_path
         }
-        // console.log('pi', pi)
+        console.log('pi', pi)
 
         res.render("basicInformation",
             {
@@ -84,24 +85,67 @@ router.post("/", upload.single('image'), async (req, res) => {
     state = req.body.state;
     aboutMe = req.body.aboutMe;
 
+    const filter = {user_id: new mongoose.Types.ObjectId(res.theUser._id) }
+
     //to make personal information free from redundancy we use upsert: if it exist before, we only update, but if it doesn't exist we insert boom 😍
 
     //, user_id: res.theUser._id
-    schema.updateOne({ user_id: res.theUser._id }, {
-        firstname, lastname, phoneNumber, email, city, state, aboutMe,pp_image_path:'/pp_images/'+pp_image_path
-    }, { upsert: true }).then(upsertResult => {
-        //console.log('insert Result: \n', insertResult);
+
+    //find one
+    const theExistingData = await schema.find(filter);
+    console.log("The existing Data", theExistingData);
+    if(theExistingData)
+        schema.updateOne(filter, {
+            firstname,
+            lastname,
+            phoneNumber,
+            city,
+            state,
+            aboutMe,
+            pp_image_path:'/pp_images/'+pp_image_path
+        }).then(updateResult=>{
+            console.log("The Info upadate successfully", updateResult);
+            req.session.message = 'The Information updated successfully';
+            return res.redirect('/basicInformation')
+        }).catch(UnabletoUpdate=>{
+            console.log('Unable to Update, ', UnabletoUpdate)
+            req.session.message = `Unable to Update, \n ${e}`;
+            return res.redirect('/basicInformation')
+        })
+    else{
+        const thisSchema = new schema({
+            firstname, lastname, phoneNumber, city, state, aboutMe,pp_image_path:'/pp_images/'+pp_image_path
+        });
+        thisSchema.save().then(insertData=>{
+            console.log("The data inserted successfully, ", insertData);
+            req.session.message = 'The Information inserted successfully';
+            return res.redirect('/basicInformation')
+        }).catch(e=>{
+            console.log("The data isnot inserted, ", e);
+            req.session.message = `The information is not inserted \n ${e}`;
+            return res.redirect('/basicInformation')
+        })
+    }
+
+    /* The old code, it was updated because it was not able to update
+
+    schema.findOneAndUpdate({ user_id: res.theUser._id }, {
+        firstname, lastname, phoneNumber, city, state, aboutMe,pp_image_path:'/pp_images/'+pp_image_path
+    }, { upsert: true, new:true }).then(upsertResult => {
+        console.log('insert Result: \n', upsertResult);
         // passing message through message variable defined above
         req.session.message = upsertResult.modifiedCount | upsertResult.matchedCount > 0 ? 'The Information updated successfully' : 'The Information inserted successfully';
         // console.log('insert Result', upsertResult)
         // console.log(req.session.message);
         res.redirect('/basicInformation')
     }).catch(e => {
-        // passing message through session module
         req.session.message = `The information is not inserted \n ${e}`;
         // console.log(req.session.message);
+        // passing message through session module
         res.redirect('/basicInformation')
     })
+     */
+
 })
 
 function nameImageFile(file,email) {
