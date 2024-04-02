@@ -1,4 +1,4 @@
-//mongo model to work with userSchema
+//mongo models to work with userSchema
 const user = require('../../models/user');
 
 module.exports = async function saveUser(email, password) {

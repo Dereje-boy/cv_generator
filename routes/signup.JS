@@ -1,7 +1,7 @@
 const express = require('express');
 const Router = express.Router();
 
-//mongo model to work with userSchema
+//mongo models to work with userSchema
 const user = require('../models/user');
 
 const errorStatus = require('../model/user/saveNewUser');
