@@ -5,27 +5,18 @@
         transition-timing-function: ease-in-out;
     }
     .sample-design:hover .img-design{
-        scale:1.5
+        scale:1.1
     }
 </style>
-<div class="main-container d-flex flex-column flex-wrap gap-3 justify-content-center align-items-center" style="min-height: 80vh; width: 100%;">
-    <h1 class="card-header text-center">Dear,
-        <span class="text-uppercase text-danger">
-            {{email}}
-        </span>
-        I am Creating your
-        <span class="text-uppercase text-danger">
-            CV
-        </span>
-        <br><i>Please Click On The Design Below</i>
-    </h1>
-    <div class="images-container d-flex gap-4 flex-wrap w-100 justify-content-center align-items-center">
+<div class="main-container d-flex flex-column flex-wrap gap-3 justify-content-center align-items-center">
+    <h4 class="text-black text-decoration-underline">Click The Design You Want....</h4>
+    <div class="images-container d-flex gap-4 flex-wrap justify-content-center align-items-center">
         <a href="{{pdf_path}}" target="_blank" class="sample-design btn btn-success d-flex flex-column justify-content-center align-items-center flex-wrap">
-            <img class="img-design" src="Images/designSample/Design1.PNG" alt="Design 1" height="400px">
+            <img class="img-design" src="Images/designSample/Design1.PNG" alt="Design 1" width="400px">
             Download This PDF
         </a>
         <a href="{{pdf_path_2}}" target="_blank" class="sample-design btn btn-success d-flex flex-column justify-content-center align-items-center flex-wrap">
-            <img class="img-design" src="Images/designSample/Design2.PNG" alt="Design 2" height="400px">
+            <img class="img-design" src="Images/designSample/Design2.PNG" alt="Design 2" width="400px">
             Download This PDF
         </a>
 
