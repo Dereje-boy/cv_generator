@@ -27,64 +27,21 @@
     }
 </style>
 
-<div class="exp-container w-100 d-flex gap-2 flex-lg-row flex-column ">
-    {{!-- left container --}}
-    <div class="left-container flex-grow-1 min-h-100 border border-warning d-flex flex-column gap-3 p-2">
-        <h3 class="w-100 text-center text-warning fw-bold">Add Your New Experience</h3>
+<script src="/script/jQuery.js"></script>
 
+<div class="exp-container w-100 min-h-100 d-flex flex-column">
 
-        <p class="fs-3 text-warning text-wrap text-underline text-center w-100">
+    <h3 class="text-center text-primary fw-bold">Your Added
+        Experiences</h3>
 
-            {{message}}
+    <p class="fw-bold fs-3 text-warning text-wrap text-underline text-center w-100">
+        {{message}}
+    </p>
 
-        </p>
-
-        <form class="container w-lg-75 w-100 h-100 d-flex flex-column align-items-center gap-3" method="post"
-            action="experience">
-            <div class="form-group w-100">
-                <label for="position" class="control-label fs-4">Position *</label>
-                <input type="text" name="position" class="form-control fw-bold p-2 fs-3" required >
-            </div>
-            <div class="form-group w-100">
-                <label for="startDate" class="control-label fs-4">Start Date *</label>
-                <input type="date" name="startDate" class="form-control fw-bold p-2 fs-3" required >
-            </div>
-            <div class="form-group w-100">
-                <label for="stillHere" class="control-label fs-4">
-                    Still I work Here
-                    <input id="checkbox" type="checkbox" name="stillHere" class="control-label fs-4">
-                </label>
-                <b></b>
-
-                <label for="endDate" class="control-label fs-4">End Date
-                    <input id="endDate" type="date" name="endDate" class="form-control fw-bold p-2 fs-3"
-                        >
-                </label>
-            </div>
-            <div class="form-group w-100">
-                <label for="companyName" class="control-label fs-4">Company Name</label>
-                <input type="text" name="companyName" class="form-control fw-bold p-2 fs-3" required >
-            </div>
-            <div class="form-group w-100">
-                <label for="aboutExperience" class="control-label fs-4 ">About The Experience *</label>
-                <textarea name="aboutExperience" id="about-me" rows="5" class="form-control fw-bold p-2 fs-3"
-                    required></textarea>
-            </div>
-            <div class="form-group w-100 d-flex justify-content-center">
-                <input type="submit" value="Add Experience" class="btn btn-primary align-self-center fs-3 text-wrap">
-            </div>
-        </form>
-
-
-    </div>
-
-    <div class="right-container flex-grow-1 min-h-100 border border-primary d-flex flex-column gap-3 p-2 overflow-hidden">
-
-        <h3 class="w-100 text-center text-success fw-bold">Your Added
-            Experiences</h3>
+    <div class="left-container flex-grow-1 w-100 d-flex flex-wrap gap-3 p-2 justify-content-center align-items-center">
 
         {{#each thisExp}}
-            <div class="one-added-exp card w-100 p-2">
+            <div class="one-added-exp card p-2 h-25">
                 <div class="card-header">
                     <h4>Position:
                         <span class="text-primary fw-bold text-capitalize">
@@ -118,6 +75,125 @@
             </div>
         {{/each}}
 
+
+    </div>
+
+    <div class="d-flex justify-content-center p-3">
+        <button
+                type="button"
+                class="button is-link"
+                data-toggle="modal"
+                data-target="#addExpModal" >
+            Add New Education
+        </button>
+    </div>
+
+    <!--    Modal-->
+
+    <div class="modal fade"
+         id="addExpModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true"
+         role="modal">
+
+        <form id="add-exp-form" method="post"
+              action="experience">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content px-0 mx-0">
+                    <div class="modal-header d-flex">
+                        <h4
+                                class="modal-title text-primary flex-grow-1 d-flex justify-content-center"
+                                id="loginModalLabel">
+                            Adding New Experience
+                        </h4>
+                        <button
+                                type="button"
+                                class="close btn btn-danger border-0"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">
+                                X
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label
+                                for="position"
+                                class="form-label w-100 fw-bold mt-4">
+                                Position *
+                        </label>
+                        <input
+                                type="text"
+                                name="position"
+                                class="form-control fw-bold px-2 fs-5"
+                                required/>
+                        <label
+                                for="startDate"
+                                class=" form-label w-100 fw-bold mt-4" >
+                                Start Date *
+                        </label>
+                        <input
+                                type="date"
+                                name="startDate"
+                                class="form-control fw-bold px-2 fs-5"
+                                required />
+                        <label
+                                for="stillHere"
+                                class="checkbox form-label fw-bold mt-4">
+                            Still I work Here
+                            <input
+                                    id="checkbox"
+                                    type="checkbox"
+                                    name="stillHere"
+                                    class="fw-bold px-2 fs-5">
+                        </label>
+                        <label
+                                for="endDate"
+                                class="form-label w-100 fw-bold mt-4">
+                                End Date
+                        <input
+                                id="endDate"
+                                type="date"
+                                name="endDate"
+                                class="form-control fw-bold px-2 fs-5">
+                        </label>
+
+                        <label
+                                for="companyName"
+                                class="form-label w-100 fw-bold mt-4">
+                                Company Name
+                        </label>
+                        <input
+                                type="text"
+                                name="companyName"
+                                class="form-control fw-bold px-2 fs-5"
+                                required >
+
+                        <label
+                                for="aboutExperience"
+                                class="form-label w-100 fw-bold mt-4 ">
+                                About The Experience *
+                        </label>
+                        <textarea
+                                name="aboutExperience"
+                                id="about-me"
+                                rows="2"
+                                class="form-control fw-bold px-2 fs-5"
+                                required
+                        ></textarea>
+                    </div>
+
+                    <div class="modal-footer ">
+                            <input
+                                    id="submit-button"
+                                    type="submit"
+                                    value="Add Education"
+                                    class="w-100 justify-content-center btn btn-success">
+                        </div>
+                    </div>
+                </div>
+        </form>
     </div>
 
 </div>

@@ -1,26 +1,12 @@
-const loginButton = document.querySelector("#login");
-const dialogContainer = document.querySelector('.dialog-container')
-const closeButton = document.querySelector('#close-button');
-
-const form = document.querySelector('#form');
-
-let email = document.querySelector("#email");
-const password = document.querySelector("#password");
-
-loginButton.addEventListener('click', (e) => {
-    //console.log("logging in");
-    dialogContainer.style.top = "20%";
-    dialogContainer.style.zIndex = "5";
-
+$("#login-form").on('submit',(e)=>{
+    processLoginForm(e);
 })
 
-closeButton.addEventListener('click', (e) => {
-    dialogContainer.style.top = "-80%";
-})
+let email = $("#email").val();
+const password = $("#password").val();
 
-dialogContainer.style.top = "-80%";
+function processLoginForm(e) {
 
-form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     //showing loader animator
@@ -30,8 +16,13 @@ form.addEventListener('submit', async (e) => {
     //hiding submit button
     $('#submit-button').addClass('d-none')
 
-    $.post('/login', { email: email.value, password: password.value }, (data, status) => {
-        //console.log(data);
+    $.post('/login',
+        {
+            email: $("#email").val(),
+            password: $("#password").val()
+        },
+        (data, status) => {
+        console.log(data);
 
         //hiding loading animator
         $('.loader').removeClass('d-flex')
@@ -43,8 +34,8 @@ form.addEventListener('submit', async (e) => {
 
         //checking status response and then redirecting
         if (status === 'success' && data.success) {
-            dialogContainer.style.top = "-80%";
-            return window.location.href = "/login"
+            return window.location.href = "./"
+            // return $("#message").text("success")
         }
 
         let errorMessage = data != undefined ? data.error : null
@@ -54,9 +45,7 @@ form.addEventListener('submit', async (e) => {
         $("#message").text(errorMessage)
 
     })
-})
-
-
+}
 
 //working with loading animation
 // const loadingContainer = document.querySelector('.index-loading-container');
@@ -68,13 +57,13 @@ form.addEventListener('submit', async (e) => {
 // }, 3000);
 
 //working with loading animation of IMAGE
-const imagePlaceholder = document.querySelector('#image-placeholder');
-setTimeout(() => {
-    if (imagePlaceholder) imagePlaceholder.style.opacity = "0";
-}, 3000);
-
-const indexContainerImages = $('.index-container img');
-
-indexContainerImages.toArray().forEach(thisImage => {
-    console.log(thisImage);
-});
+// const imagePlaceholder = document.querySelector('#image-placeholder');
+// setTimeout(() => {
+//     if (imagePlaceholder) imagePlaceholder.style.opacity = "0";
+// }, 3000);
+//
+// const indexContainerImages = $('.index-container img');
+//
+// indexContainerImages.toArray().forEach(thisImage => {
+//     console.log(thisImage);
+// });

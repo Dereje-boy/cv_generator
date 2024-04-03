@@ -1,0 +1,6 @@
+@use "initial-variables" as iv;
+@use "mixins" as mx;
+
+.#{iv.$class-prefix}delete {
+  @include mx.delete;
+}

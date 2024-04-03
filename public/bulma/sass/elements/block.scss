@@ -1,0 +1,6 @@
+@use "initial-variables" as iv;
+@use "extends";
+
+.#{iv.$class-prefix}block {
+  @extend %block;
+}

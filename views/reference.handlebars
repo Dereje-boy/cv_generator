@@ -19,8 +19,137 @@
     }
 </style>
 
-<div class="ref-container w-100 border border-primary p-2 d-flex gap-2">
+<script src="/script/jQuery.js"></script>
 
+<div class="ref-container w-100 min-h-100 d-flex flex-column">
+
+    <h3 class="text-center text-primary fw-bold">Your Added
+        References</h3>
+    <p class="fs-3 text-success text-wrap text-capitalize text-center w-100">
+        {{message}}
+    </p>
+
+    <div class="left-container flex-grow-1 w-100 d-flex flex-wrap gap-3 p-2 justify-content-center align-items-center">
+    {{!-- For Each reference --}}
+    {{#each referencesData}}
+        <div class="one-added-ref card p-2 h-25">
+            <div class="card-header">
+                <h5>Fullname: {{fullname}}</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="ps-3 card-title">Phone: {{phoneNumber}}</h5>
+                <h5 class="ps-3 card-title">Email: {{email}}</h5>
+                <h5 class="ps-3 card-title">Role : {{role}}</h5>
+                <button id="delete-button" class="btn btn-danger ps-3">Delete Reference</button>
+                <p id="object-id" class="opacity-0 d-none">{{objectID}}</p>
+            </div>
+
+        </div>
+    {{/each}}
+    </div>
+
+    <div class="d-flex justify-content-center p-3">
+        <button
+                type="button"
+                class="button is-link"
+                data-toggle="modal"
+                data-target="#addRefModel" >
+            Add New Language
+        </button>
+    </div>
+
+
+    <div class="modal fade"
+         id="addRefModel"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true"
+         role="modal">
+
+        <form id="add-lang-form"
+              method="post"
+              action="reference">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content px-0 mx-0">
+                    <div class="modal-header d-flex">
+                        <h3
+                                class="modal-title text-primary flex-grow-1 d-flex justify-content-center"
+                                id="loginModalLabel">
+                            Add Your New Reference
+                        </h3>
+                        <button
+                                type="button"
+                                class="close btn btn-danger border-0"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">
+                                X
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label
+                            for="fullname"
+                            class="form-label w-100 fw-bold mt-4">
+                            Fullname *
+                        </label>
+                        <input
+                            type="text"
+                            name="fullname"
+                            class="form-control fw-bold px-2 fs-5"
+                            required/>
+
+                        <label
+                            for="phone"
+                            class="form-label w-100 fw-bold mt-4">
+                            Phone No. *
+                        </label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            class="form-control fw-bold px-2 fs-5"
+                            required/>
+
+                        <label
+                            for="email"
+                            class="form-label w-100 fw-bold mt-4">
+                            Email *
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control fw-bold px-2 fs-5"
+                            required/>
+
+                        <label
+                                for="role"
+                                class="form-label w-100 fw-bold mt-4">
+                            Role *</label>
+                        <input
+                                type="text"
+                                name="role"
+                                class="form-control fw-bold px-2 fs-5"
+                                required/>
+
+                    </div>
+
+                    <div class="modal-footer ">
+                        <input
+                                id="submit-button"
+                                type="submit"
+                                value="Add Reference"
+                                class="w-100 justify-content-center btn btn-success">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+
+ <!--
     <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-success fw-bold">Your Added
             References</h3>
@@ -53,30 +182,59 @@
 
         <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="reference">
             <div class="form-group w-100">
-                <label for="fullname" class="control-label fs-4">Fullname *</label>
-                <input type="text" name="fullname" class="form-control fw-bold p-2 fs-4" required value={{fullname}}>
+                <label
+                    for="fullname"
+                    class="form-label w-100 fw-bold mt-4">
+                    Fullname *
+                </label>
+                <input
+                    type="text"
+                    name="fullname"
+                    class="form-control fw-bold px-2 fs-5"
+                    required/>
             </div>
             <div class="form-group w-100">
-                <label for="phone" class="control-label fs-4">Phone No. *</label>
-                <input type="tel" name="phone" class="form-control fw-bold p-2 fs-4" required value={{phone}}>
+                <label
+                    for="phone"
+                    class="form-label w-100 fw-bold mt-4">
+                    Phone No. *
+                </label>
+                <input
+                    type="tel"
+                    name="phone"
+                    class="form-control fw-bold px-2 fs-5"
+                    required/>
             </div>
             <div class="form-group w-100">
-                <label for="email" class="control-label fs-4">Email *</label>
-                <input type="email" name="email" class="form-control fw-bold p-2 fs-4" required value={{email}}>
+                <label
+                    for="email"
+                    class="form-label w-100 fw-bold mt-4">
+                    Email *
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control fw-bold px-2 fs-5"
+                    required/>
             </div>
             <div class="form-group w-100">
-                <label for="role" class="control-label fs-4">Role *</label>
-                <input type="text" name="role" class="form-control fw-bold p-2 fs-4" required value={{role}}>
+                <label
+                    for="role"
+                    class="form-label w-100 fw-bold mt-4">
+                    Role *</label>
+                <input
+                    type="text"
+                    name="role"
+                    class="form-control fw-bold px-2 fs-5"
+                    required/>
             </div>
             <div class="form-group w-50">
                 <input type="submit" value="Add Reference" class="btn btn-primary align-self-center w-100 fs-4">
             </div>
         </form>
-
-
     </div>
 
+    -->
 </div>
 
-<script src="/script/jquery.js"></script>
 <script src="/script/references.js"></script>

@@ -7,6 +7,7 @@
            minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="/bulma/css/bulma.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="icon" href="/Images/cv_generator_log.png"  type="image/png">
 
@@ -39,57 +40,91 @@
 
         </div>
 
-        <button id="login" class="btn d-flex text-white text-decoration-none align-items-center h-100">
+
+
+<!--        Old btn-->
+<!--        <button id="login" class="btn d-flex text-white text-decoration-none align-items-center h-100">-->
+<!--            <h6>Login</h6>-->
+<!--        </button>-->
+
+
+        <div class="modal fade"
+              id="loginModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+             role="modal"
+        >
+
+            <form action="/login"
+                  method="post" id="login-form">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        {{!-- Header container with login text and close button --}}
+                      <!--  <div class="close-container w-100 d-flex justify-content-center">
+                            <h1 class="text-center grow-5 text-primary">Login</h1>
+                            <h4 id="close-button"
+                                class="btn btn-danger ms-auto border border-2 text-center d-flex align-items-center justify-content-center">
+                                X</h4>
+                        </div>-->
+
+
+                        <h4 class="modal-title text-primary " id="loginModalLabel">Login</h4>
+                        <button type="button" class="close btn btn-danger border-0" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                            {{!-- Message container --}}
+                            <div class="message-container d-flex justify-content-center align-items center">
+                                <h5 class="text-primary text-center" id="message"> Please Enter your email and password and click Submit button</h5>
+                            </div>
+
+                            {{!-- Email container --}}
+                            <div class="email-container">
+                                <label for="email" class="form-label fw-bold">Email</label>
+                                <input type="text" class="form-control fs-5" name="email" id="email">
+                            </div>
+
+                            {{!-- Password container --}}
+                            <div class="password-container">
+                                <label for="password" class="form-label fw-bold">Password</label>
+                                <input type="password" class="form-control fs-5" name="password" id="password">
+                            </div>
+
+                            {{!-- Sign up button container --}}
+                            <div class="sign-up-container d-flex flex-column justify-content-start py-2">
+                                <a href="/signup" class="text-decoration-none border-1 border-bottom pt-1 border-success">
+                                    new to CV Generator?<br>
+                                    <strong> Sign up Here</strong></a>
+                            </div>
+                    </div>
+
+                    <div class="modal-footer ">
+                        {{!-- Submit button container --}}
+                        <div class="submit-container w-100 d-flex justify-content-center align-items-center gap-3">
+                            <div class="loader d-none">
+
+                            </div>
+                            <input
+                                    id="submit-button"
+                                    type="submit"
+                                    value="Submit"
+                                    class="btn btn-success"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+
+        <button type="button" class="btn btn-primary d-flex text-white text-decoration-none align-items-center h-100" data-toggle="modal" data-target="#loginModal" >
             <h6>Login</h6>
         </button>
 
-        <form
-            class="dialog-container d-flex flex-column justify-content-between align-items-center border border-2 border-primary "
-            method="post" action="/login" id="form">
-
-            {{!-- Header container with login text and close button --}}
-            <div class="close-container w-100 d-flex justify-content-center">
-                <h1 class="text-center grow-5 text-primary">Login</h1>
-                <h4 id="close-button"
-                    class="btn btn-danger ms-auto border border-2 text-center d-flex align-items-center justify-content-center">
-                    X</h4>
-            </div>
-
-            {{!-- Message container --}}
-            <div class="message-container w-75 d-flex justify-content-center align-items center ">
-                <h5 class="text-primary text-center" id="message"> Please Enter your email and password to enter
-                    dashboard </h5>
-            </div>
-
-            {{!-- Email container --}}
-            <div class="email-container w-75">
-                <label for="email" class="form-label fw-bold">Email</label>
-                <input type="text" class="form-control fs-5" name="email" id="email">
-            </div>
-
-            {{!-- Password container --}}
-            <div class="password-container w-75">
-                <label for="password" class="form-label fw-bold">Password</label>
-                <input type="password" class="form-control fs-5" name="password" id="password">
-            </div>
-
-            {{!-- Sign up button container --}}
-            <div class="sign-up-container w-75 d-flex flex-column justify-content-start py-2">
-                <a href="/signup">
-                    Don't you have an existing account?<br>
-                    <strong>Sign up Here</strong></a>
-            </div>
-            </div>
-
-            {{!-- Submit button container --}}
-            <div class="submit-container w-100 d-flex justify-content-center align-items-center gap-3">
-                <div class="loader d-none">
-
-                </div>
-                <input id="submit-button" type="submit" value="Submit" class="btn btn-success">
-            </div>
-
-        </form>
 
     </header>
 
@@ -135,9 +170,9 @@
 
     </footer>
 
-    <script src="/script/index.js"></script>
     <script src="/script/jQuery.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/script/index.js"></script>
 
 
 </body>

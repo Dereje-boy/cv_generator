@@ -48,7 +48,7 @@ Router.post('/', (req, res) => {
     })
 
     reference.save().then(insertResult => {
-        req.session.message = "reference added message";
+        req.session.message = "reference added";
         return res.redirect('/reference')
         //console.log(insertResult)
     }).catch(error => {

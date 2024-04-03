@@ -13,9 +13,102 @@
     }
 </style>
 
-<div class="hob-container w-100 border border-primary p-2 d-flex gap-2">
+<script src="/script/jQuery.js"></script>
 
 
+<div class="hob-container w-100 min-h-100 d-flex flex-column">
+
+    <h3 class="text-center text-primary fw-bold">Your Added
+        Hobbies</h3>
+
+    <p class="fw-bold fs-3 text-warning text-wrap text-underline text-center w-100">
+        {{message}}
+    </p>
+
+
+    <div class="left-container flex-grow-1 w-100 d-flex flex-wrap gap-3 p-2 justify-content-center align-items-center">
+        {{#each thisUsersHobbies}}
+            <div id="{{this}}" class="single-hobby btn  text-primary card px-5 overflow-hidden">
+                <h5 class="text-capitalize" id="{{this}}">{{this}}</h5>
+                <button class="deleter btn btn-danger" id="{{this}}">X</button>
+            </div>
+        {{/each}}
+
+    </div>
+
+
+    <div class="d-flex justify-content-center p-3">
+        <button
+                type="button"
+                class="button is-link"
+                data-toggle="modal"
+                data-target="#addHobbyModal" >
+            Add New Language
+        </button>
+    </div>
+
+    <!--    Modal-->
+
+    <div class="modal fade"
+         id="addHobbyModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true"
+         role="modal">
+
+        <form id="add-lang-form"
+              method="post"
+              action="hobbies">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content px-0 mx-0">
+                    <div class="modal-header d-flex">
+                        <h4
+                                class="modal-title text-primary flex-grow-1 d-flex justify-content-center"
+                                id="loginModalLabel">
+                            Adding New Hobby
+                        </h4>
+                        <button
+                                type="button"
+                                class="close btn btn-danger border-0"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">
+                                X
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label
+                                for="hobbies"
+                                class="form-label w-100 fw-bold mt-4">
+                            Hobbies *
+                        </label>
+                        <input
+                                type="text"
+                                name="hobbies"
+                                class="form-control fw-bold px-2 fs-5"
+                                required/>
+
+                        <p>Separate your multiple hobbies by comma (,) eg: hiking, riding, playing cricket</p>
+
+
+                    </div>
+
+                    <div class="modal-footer ">
+                        <input
+                                id="submit-button"
+                                type="submit"
+                                value="Add Education"
+                                class="w-100 justify-content-center btn btn-success">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <!--    No more down-->
+    <!--
     <div class="left-container w-50 min-h-100 border border-success d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-success fw-bold">Your Added
             Hobbies</h3>
@@ -47,10 +140,21 @@
     <div class="right-container w-50 min-h-100 border border-warning d-flex flex-column gap-3 p-3">
         <h3 class="w-100 text-center text-warning fw-bold">Add Your New Hobby</h3>
 
-        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3" method="post" action="hobbies">
+        <form class="container w-75 h-100 d-flex flex-column align-items-center gap-3"
+              method="post"
+              action="hobbies">
             <div class="form-group w-100">
-                <label for="hobbies" class="control-label fs-4">Hobbies *</label>
-                <input type="text" name="hobbies" class="form-control fw-bold p-2 fs-4" required value={{hobbies}}>
+                <label
+                    for="hobbies"
+                    class="form-label w-100 fw-bold mt-4">
+                    Hobbies *
+                </label>
+                <input
+                    type="text"
+                    name="hobbies"
+                    class="form-control fw-bold px-2 fs-5"
+                    required/>
+
                 <p>Separate your multiple hobbies by comma (,) eg: hiking, riding, playing cricket</p>
             </div>
             <div class="form-group w-50">
@@ -58,6 +162,6 @@
             </div>
         </form>
     </div>
-
+    -->
 </div>
 <script src="/script/hobbies.js"></script>
