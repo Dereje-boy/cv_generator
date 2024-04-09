@@ -11,8 +11,6 @@ const B2 =require('backblaze-b2');
 const fs = require('fs')
 const axios = require('axios');
 
-const path = require('path');
-
 //schema
 const userSchema = require('./models/user');
 //middlewares
@@ -88,7 +86,7 @@ const app = express();
 app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
-app.use(body_parser())
+app.use(body_parser({extended:true}))
 app.use(cookieParser())
 app.use(session({
     secret: 'your-secret-key', // Change this to a random string

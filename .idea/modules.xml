@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/cv_generator.iml" filepath="$PROJECT_DIR$/.idea/cv_generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mr-x-movies/.idea/mr-x-movies.iml" filepath="$PROJECT_DIR$/../mr-x-movies/.idea/mr-x-movies.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../rama/rama-prisma/.idea/rama-prisma.iml" filepath="$PROJECT_DIR$/../../../rama/rama-prisma/.idea/rama-prisma.iml" />
     </modules>
   </component>
 </project>
