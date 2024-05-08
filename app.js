@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
-const B2 =require('backblaze-b2');
+const B2 = require('backblaze-b2');
 const fs = require('fs')
 const axios = require('axios');
 
@@ -29,30 +29,34 @@ const signup = require('./routes/signup.JS');
 const dashboard = require('./routes/dashboard.js');
 const createCV = require('./routes/createCV.js');
 
+//api, for rest full frontend
+const api_basicInformation = require('./routes/api/basicInformation.js');
+const api_verifier = require('./routes/api/api_verifier.js');
+
 //check the user exist for the token we have on client side
 const checkUserExist = require('./model/user/checkUserExist');
-const {response} = require("express");
+const { response } = require("express");
 
 //instantiating mongo
 // Connect to MongoDB database
 
 //Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
-mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
-    then(success => {
-        //console.log(success);
-    }).
-    catch(e => {
-        console.log('Failed to connect to MongoDB',e);
-    });
-
-//localdb = mongodb://localhost:27017/cvGenerator
-// mongoose.connect('mongodb://localhost:27017/cvGenerator')
-//     .then(success => {
+// mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
+//     then(success => {
 //         //console.log(success);
 //     }).
 //     catch(e => {
 //         console.log('Failed to connect to MongoDB',e);
 //     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+mongoose.connect('mongodb://localhost:27017/cvGenerator')
+    .then(success => {
+        //console.log(success);
+    }).
+    catch(e => {
+        console.log('Failed to connect to MongoDB', e);
+    });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -86,7 +90,7 @@ const app = express();
 app.engine('handlebars', handlebars.engine)
 app.set('view engine', "handlebars")
 app.use(express.static(__dirname + "/public"))
-app.use(body_parser({extended:true}))
+app.use(body_parser({ extended: true }))
 app.use(cookieParser())
 app.use(session({
     secret: 'your-secret-key', // Change this to a random string
@@ -106,6 +110,11 @@ app.use('/createCv', verifier, createCV);
 app.use('/login', login);
 app.use('/signup', signup);
 
+
+//============API -- Routing
+app.use('/api/basicInformation', api_verifier);
+
+
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
     const token = req.cookies.token;
@@ -118,7 +127,7 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
         jwt.verify(token, 'my-secret-key', async (error, theUser) => {
             //unable to verify the cookie so render login page
             if (error)
-                return res.render("index", { email, title:"CV GENERATOR" });
+                return res.render("index", { email, title: "CV GENERATOR" });
 
             //checking the user with verified email address exist
             const userExist = checkUserExist.check(theUser.email).then(userExist => {
@@ -127,22 +136,22 @@ app.get("/", (req, res) => { //1. first check if the right cookie available
 
                 email = userExist != null ?
                     userExist.email : ""
-                res.render("index", { email, title:"CV GENERATOR" });
+                res.render("index", { email, title: "CV GENERATOR" });
 
             }).catch(e => {
-                res.render("index", { email, title:"CV GENERATOR" });
+                res.render("index", { email, title: "CV GENERATOR" });
             })
         })
     } else {
-        res.render("index", { email, title:"CV GENERATOR" });
+        res.render("index", { email, title: "CV GENERATOR" });
     }
 })
 
-app.get('/blogs',(req,res)=>{
+app.get('/blogs', (req, res) => {
     res.render('blogs');
 })
 
-app.get('/b2',async (req,res)=>{
+app.get('/b2', async (req, res) => {
     // const b2 = new B2({
     //     accountID:'0053fb7f01f1e6d0000000001',
     //     applicationKey:'K005vWj05UcmB6OlYEOMebd6BqAGtuo'
@@ -189,9 +198,9 @@ app.get('/b2',async (req,res)=>{
 
 })
 
-async function downloadFile(b2,filename){
+async function downloadFile(b2, filename) {
     console.log(filename)
-    try{
+    try {
         const response = await b2.downloadFileByName({
             bucketName: 'cv-generator',
             fileName: filename,
@@ -201,11 +210,11 @@ async function downloadFile(b2,filename){
         // Define content type for PDF
         const contentType = 'application/pdf';
         // You can save the PDF file locally or do other operations with it
-        fs.writeFileSync(filename+'.pdf', fileContent);
+        fs.writeFileSync(filename + '.pdf', fileContent);
         console.log('PDF file downloaded successfully');
 
-    }catch (e) {
-        console.log('unable to download a file',e)
+    } catch (e) {
+        console.log('unable to download a file', e)
     }
 
     // b2.downloadFileByName({
@@ -219,38 +228,38 @@ async function downloadFile(b2,filename){
     // })
 }
 
-async function GetBucket(b2,res) {
-    b2.authorize().then(async ()=> {
-            console.log('authorized')
-            // res.send('Authorized...')
-            try {
-                let response = await b2.getBucket({ bucketName: 'cv-generator' });
-                console.log(response.data);
-                res.send('working..')
-            } catch (err) {
-                console.log('Error getting bucket:', err);
-                res.send('Error getting bucket:', err)
-            }
+async function GetBucket(b2, res) {
+    b2.authorize().then(async () => {
+        console.log('authorized')
+        // res.send('Authorized...')
+        try {
+            let response = await b2.getBucket({ bucketName: 'cv-generator' });
+            console.log(response.data);
+            res.send('working..')
+        } catch (err) {
+            console.log('Error getting bucket:', err);
+            res.send('Error getting bucket:', err)
         }
-    ).catch(err=>{
-        console.log('unauthorized ',err)
-        res.send('unauthorized ',err)
+    }
+    ).catch(err => {
+        console.log('unauthorized ', err)
+        res.send('unauthorized ', err)
     })
 }
 
-async function uploadFile(b2, res){
+async function uploadFile(b2, res) {
 
-    b2.authorize().then(()=>{
+    b2.authorize().then(() => {
         console.log('authorized, Now uploading file...')
 
         b2.getUploadUrl({
             bucketId: 'a31f5b577f7061bf81ee061d'
-        }).then(response=>{
+        }).then(response => {
             console.log('uploadUrl: ', response.data.uploadUrl);
             console.log('authorizationToken: ', response.data.authorizationToken);
 
             fileId = '4_za31f5b577f7061bf81ee061d_f1023e422ba581b96_d20240327_m055251_c005_v0501017_t0013_u01711518771769';
-            generateTemporaryUrl(fileId,'0053fb7f01f1e6d0000000002','K005rcBFrawVI/hD+v5eCxce9CO4ovA' );
+            generateTemporaryUrl(fileId, '0053fb7f01f1e6d0000000002', 'K005rcBFrawVI/hD+v5eCxce9CO4ovA');
 
 
             // b2.uploadFile({
@@ -271,10 +280,10 @@ async function uploadFile(b2, res){
             // }).catch(err => {
             //     console.error('Upload failed:', err);
             // });
-        }).catch(e=>{
+        }).catch(e => {
             console.log("unable to get upload url", e);
         })
-    }).catch(e=>{
+    }).catch(e => {
         console.log('unauthorized, Unable to upload file....')
     })
     /*
@@ -291,7 +300,7 @@ async function uploadFile(b2, res){
     */
 }
 
-const generateTemporaryUrl = async (fileId,accountId, applicationKey) => {
+const generateTemporaryUrl = async (fileId, accountId, applicationKey) => {
     console.log('== Generating Application Ke ==');
     try {
         // Authenticate with Backblaze B2
@@ -301,13 +310,13 @@ const generateTemporaryUrl = async (fileId,accountId, applicationKey) => {
             applicationKey: 'K005rcBFrawVI/hD+v5eCxce9CO4ovA' // or masterApplicationKey
         });
 
-        b2.authorize().then(async authorized=>{
-            console.log('Authorize response: ', authorized?true:false);
+        b2.authorize().then(async authorized => {
+            console.log('Authorize response: ', authorized ? true : false);
             const authorizationToken = authorized.data.authorizationToken;
             const apiUrl = authorized.data.apiUrl;
 
             console.log("Authorization token :", authorizationToken, "\napiUrl", apiUrl);
-            console.log('url: ', apiUrl+"/file/cv-generator/cv_65f9d22237540f1c49e99e20.pdf?Authorization="+authorizationToken)
+            console.log('url: ', apiUrl + "/file/cv-generator/cv_65f9d22237540f1c49e99e20.pdf?Authorization=" + authorizationToken)
 
             // b2.getDownloadAuthorization({
             //     bucketId: 'a31f5b577f7061bf81ee061d',
@@ -326,19 +335,19 @@ const generateTemporaryUrl = async (fileId,accountId, applicationKey) => {
 
             axios.post(apiUrl + '/b2api/v2/b2_get_download_authorization', {
                 bucketId: 'a31f5b577f7061bf81ee061d',
-                validDurationInSeconds: 60*60*24*6, // Set the validity duration (in seconds) for the temporary URL
-                fileNamePrefix:''
+                validDurationInSeconds: 60 * 60 * 24 * 6, // Set the validity duration (in seconds) for the temporary URL
+                fileNamePrefix: ''
             }, {
                 headers: {
                     Authorization: authorizationToken
                 }
-            }).then(temporaryUrlResponse=>{
+            }).then(temporaryUrlResponse => {
                 console.log(temporaryUrlResponse);
-            }).catch(e=>{
-                console.log('Unable to get temporaryUrlResponse\n',e);
+            }).catch(e => {
+                console.log('Unable to get temporaryUrlResponse\n', e);
             })
 
-        }).catch(e=>{
+        }).catch(e => {
             console.log('Un authorized: ', e)
         })
 
@@ -447,4 +456,4 @@ function pdfCreator(res) {
     doc.end();
 }
 
-app.listen(23001, () => console.log("The server started running on port 3000"))
+app.listen(3000, () => console.log("The server started running on port 3000"))

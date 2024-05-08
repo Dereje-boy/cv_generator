@@ -14,13 +14,14 @@ const myStorage = multer.diskStorage({
     filename: function (req, file, cb) {
         let email = thisRes?.theUser.email
         console.log(file)
-        cb(null, nameImageFile(file,email) )
+        cb(null, nameImageFile(file, email))
     }
 })
 
 let thisRes;
 
-const upload = multer({storage:myStorage});
+const upload = multer({ storage: myStorage });
+
 router.get("/", async (req, res) => {
     thisRes = res;
     let email;
@@ -42,7 +43,7 @@ router.get("/", async (req, res) => {
             phoneNumber: PI[0]?.phoneNumber,
             state: PI[0]?.state,
             alreadyExist: PI[0] ? true : false,
-            pp_image_path:PI[0]?.pp_image_path
+            pp_image_path: PI[0]?.pp_image_path
         }
         console.log('pi', pi)
 
@@ -70,6 +71,52 @@ router.get("/", async (req, res) => {
 
 let pp_image_path;
 
+router.get('/pi', async (req, res) => {
+    thisRes = res;
+    let email;
+
+    try {
+        const PI = await schema.find({ email: res.theUser.email })
+        //console.log({ user_id: res.theUser._id }, 'PI', PI)
+
+        //get the email from the existing user account used when creating account
+        email = res.theUser.email
+
+        const pi = {
+            _id: PI[0]?._id,
+            aboutMe: PI[0]?.aboutMe,
+            city: PI[0]?.city,
+            email,
+            firstname: PI[0]?.firstname,
+            lastname: PI[0]?.lastname,
+            phoneNumber: PI[0]?.phoneNumber,
+            state: PI[0]?.state,
+            alreadyExist: PI[0] ? true : false,
+            pp_image_path: PI[0]?.pp_image_path
+        }
+        console.log('pi', pi)
+
+        res.send(pi);
+
+    } catch (error) {
+
+        const pi = {
+            _id: PI[0]?._id,
+            aboutMe: PI[0]?.aboutMe,
+            city: PI[0]?.city,
+            email,
+            firstname: PI[0]?.firstname,
+            lastname: PI[0]?.lastname,
+            phoneNumber: PI[0]?.phoneNumber,
+            state: PI[0]?.state,
+            alreadyExist: PI[0] ? true : false,
+            pp_image_path: PI[0]?.pp_image_path
+        }
+        res.send(pi);
+
+    }
+})
+
 router.post("/", upload.single('image'), async (req, res) => {
 
     console.log("The basic information ", req.body);
@@ -85,7 +132,7 @@ router.post("/", upload.single('image'), async (req, res) => {
     state = req.body.state;
     aboutMe = req.body.aboutMe;
 
-    const filter = {user_id: new mongoose.Types.ObjectId(res.theUser._id) }
+    const filter = { user_id: new mongoose.Types.ObjectId(res.theUser._id) }
 
     //to make personal information free from redundancy we use upsert: if it exist before, we only update, but if it doesn't exist we insert boom 😍
 
@@ -94,7 +141,7 @@ router.post("/", upload.single('image'), async (req, res) => {
     //find one
     const theExistingData = await schema.find(filter);
     console.log("The existing Data", theExistingData);
-    if(theExistingData)
+    if (theExistingData)
         schema.updateOne(filter, {
             firstname,
             lastname,
@@ -102,25 +149,25 @@ router.post("/", upload.single('image'), async (req, res) => {
             city,
             state,
             aboutMe,
-            pp_image_path:'/pp_images/'+pp_image_path
-        }).then(updateResult=>{
+            pp_image_path: '/pp_images/' + pp_image_path
+        }).then(updateResult => {
             console.log("The Info upadate successfully", updateResult);
             req.session.message = 'The Information updated successfully';
             return res.redirect('/basicInformation')
-        }).catch(UnabletoUpdate=>{
+        }).catch(UnabletoUpdate => {
             console.log('Unable to Update, ', UnabletoUpdate)
             req.session.message = `Unable to Update, \n ${e}`;
             return res.redirect('/basicInformation')
         })
-    else{
+    else {
         const thisSchema = new schema({
-            firstname, lastname, phoneNumber, city, state, aboutMe,pp_image_path:'/pp_images/'+pp_image_path
+            firstname, lastname, phoneNumber, city, state, aboutMe, pp_image_path: '/pp_images/' + pp_image_path
         });
-        thisSchema.save().then(insertData=>{
+        thisSchema.save().then(insertData => {
             console.log("The data inserted successfully, ", insertData);
             req.session.message = 'The Information inserted successfully';
             return res.redirect('/basicInformation')
-        }).catch(e=>{
+        }).catch(e => {
             console.log("The data isnot inserted, ", e);
             req.session.message = `The information is not inserted \n ${e}`;
             return res.redirect('/basicInformation')
@@ -148,10 +195,10 @@ router.post("/", upload.single('image'), async (req, res) => {
 
 })
 
-function nameImageFile(file,email) {
+function nameImageFile(file, email) {
     console.log('original file name', file.originalname)
     const fileExtension = file.originalname?.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
-    pp_image_path = email+ fileExtension
+    pp_image_path = email + fileExtension
     return pp_image_path;
 
 }

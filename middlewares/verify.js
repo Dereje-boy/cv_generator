@@ -7,7 +7,10 @@ const verifier = (req, res, next) => {
 
     //1. first check if the right cookie available
     const token = req.cookies.token;
-    //console.log(token);
+    // for (let t in req.cookies) {
+    //     console.log(t + " = " + req.cookies[t]);
+    // };
+    console.log("cookie token: ", req.cookies.token);
 
     //check to cookie
     if (token) {

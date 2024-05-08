@@ -1,0 +1,8 @@
+const jwt = require('jsonwebtoken');
+
+
+const verifier = (req, res, next) => {
+
+
+}
+module.exports = verifier;

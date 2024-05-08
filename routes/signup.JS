@@ -8,7 +8,6 @@ const errorStatus = require('../model/user/saveNewUser');
 const inputChecker = require('../model/user/inputChecker');
 const jwt = require('jsonwebtoken');
 
-
 Router.get('/', async (req, res) => {
     res.render("signup", { message: req.session.message })
     delete req.session.message;
@@ -108,7 +107,7 @@ async function saveUser(email, password) {
                 status: errorStatus.emailDuplicate,
                 message: 'Email already used, Try with new email or click forgot to get back your account',
             }
-            console.log('\n====== Error =====\n', response, '\n===== Error ====\n')
+            console.log('\n====== Error =====\n', response, '\n===== Error ====\n');
             return response;
         }
         response = {
