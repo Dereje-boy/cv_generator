@@ -71,52 +71,6 @@ router.get("/", async (req, res) => {
 
 let pp_image_path;
 
-router.get('/pi', async (req, res) => {
-    thisRes = res;
-    let email;
-
-    try {
-        const PI = await schema.find({ email: res.theUser.email })
-        //console.log({ user_id: res.theUser._id }, 'PI', PI)
-
-        //get the email from the existing user account used when creating account
-        email = res.theUser.email
-
-        const pi = {
-            _id: PI[0]?._id,
-            aboutMe: PI[0]?.aboutMe,
-            city: PI[0]?.city,
-            email,
-            firstname: PI[0]?.firstname,
-            lastname: PI[0]?.lastname,
-            phoneNumber: PI[0]?.phoneNumber,
-            state: PI[0]?.state,
-            alreadyExist: PI[0] ? true : false,
-            pp_image_path: PI[0]?.pp_image_path
-        }
-        console.log('pi', pi)
-
-        res.send(pi);
-
-    } catch (error) {
-
-        const pi = {
-            _id: PI[0]?._id,
-            aboutMe: PI[0]?.aboutMe,
-            city: PI[0]?.city,
-            email,
-            firstname: PI[0]?.firstname,
-            lastname: PI[0]?.lastname,
-            phoneNumber: PI[0]?.phoneNumber,
-            state: PI[0]?.state,
-            alreadyExist: PI[0] ? true : false,
-            pp_image_path: PI[0]?.pp_image_path
-        }
-        res.send(pi);
-
-    }
-})
-
 router.post("/", upload.single('image'), async (req, res) => {
 
     console.log("The basic information ", req.body);

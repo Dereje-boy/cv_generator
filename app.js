@@ -30,8 +30,9 @@ const dashboard = require('./routes/dashboard.js');
 const createCV = require('./routes/createCV.js');
 
 //api, for rest full frontend
-const api_basicInformation = require('./routes/api/basicInformation.js');
-const api_verifier = require('./routes/api/api_verifier.js');
+const api_basicInformation = require('./routes/api/api_basicInformation.js');
+const api_education = require('./routes/api/api_education.js');
+const api_experience = require('./routes/api/api_experience.js');
 
 //check the user exist for the token we have on client side
 const checkUserExist = require('./model/user/checkUserExist');
@@ -110,10 +111,10 @@ app.use('/createCv', verifier, createCV);
 app.use('/login', login);
 app.use('/signup', signup);
 
-
 //============API -- Routing
-app.use('/api/basicInformation', api_verifier);
-
+app.use('/api/basicInformation', api_basicInformation);
+app.use('/api/education', api_education);
+app.use('/api/experience', api_experience);
 
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available
