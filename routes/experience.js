@@ -55,7 +55,7 @@ router.post('', async (req, res) => {
     let { endDate } = req.body;
 
     //typeof stillHere is either string with 'on' or undefined type
-    if (typeof stillHere == typeof "") endDate = '';
+    if (typeof stillHere == typeof "" && stillHere.length>1) endDate = '';
 
 
     let thisExperience = new schema({
