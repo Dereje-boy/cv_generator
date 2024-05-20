@@ -42,22 +42,22 @@ const checkUserExist = require('./model/user/checkUserExist');
 // Connect to MongoDB database
 
 //Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
-// mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
-//     then(success => {
-//         //console.log(success);
-//     }).
-//     catch(e => {
-//         console.log('Failed to connect to MongoDB',e);
-//     });
-
-//localdb = mongodb://localhost:27017/cvGenerator
-mongoose.connect('mongodb://localhost:27017/cvGenerator')
-    .then(success => {
+mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
+    then(success => {
         //console.log(success);
     }).
     catch(e => {
-        console.log('Failed to connect to MongoDB', e);
+        console.log('Failed to connect to MongoDB',e);
     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+// mongoose.connect('mongodb://localhost:27017/cvGenerator')
+//     .then(success => {
+//         //console.log(success);
+//     }).
+//     catch(e => {
+//         console.log('Failed to connect to MongoDB', e);
+//     });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
