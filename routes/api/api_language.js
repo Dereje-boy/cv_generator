@@ -5,9 +5,10 @@ const router = express.Router();
 const cookieVerifier = require('./api_verifier');
 
 //user defined modules
-const education = require('../../models/education');
+const language = require('../../models/language');
 const user = require('../../models/user');
 const mongoose = require('mongoose');
+const education = require("../../models/education");
 // const result = {
 //     operation: '',
 //     success: false,
@@ -15,7 +16,7 @@ const mongoose = require('mongoose');
 //     solution: '',
 // };
 
-router.post('/new', async (req,res) =>{
+router.post('/new', async(req,res)=>{
     const cookie = req.body.cookie;
     console.log(req.body);
 
@@ -26,7 +27,7 @@ router.post('/new', async (req,res) =>{
     //if cookie is failed to verify
     if (cookieVerifyResult.cookieVerified == false)
         return res.send({
-            operation: 'new-post',
+            operation: 'new-post-lang',
             success: false,
             reason: cookieVerifyResult.reason,
             solution: cookieVerifyResult.solution
@@ -47,18 +48,17 @@ router.post('/new', async (req,res) =>{
             solution: 'Please, create new account or login'
         });
 
-    const thisEdu = {
-        nameOfUniversity: req.body.nameOfUniversity,
-        titleOfDocument: req.body.titleOfDocument,
-        CGPA: req.body.CGPA,
-        yearOfGraduation: req.body.yearOfGraduation,
+    const thisLang = {
+        langauge: req.body.language,
+        level: req.body.level,
         user_id: theUser._id
     }
-
-    const createResult = await createNewEdu(thisEdu);
+    const createResult = await createNewLang(thisLang);
 
     res.send(createResult)
-});
+
+})
+
 
 router.get('/one', async (req,res)=>{
 
@@ -71,7 +71,7 @@ router.get('/one', async (req,res)=>{
     //if cookie is failed to verify
     if (cookieVerifyResult.cookieVerified == false)
         return res.send({
-            operation: 'one-pi-get',
+            operation: 'one-lang-get',
             success: false,
             reason: cookieVerifyResult.reason,
             solution: cookieVerifyResult.solution
@@ -85,30 +85,30 @@ router.get('/one', async (req,res)=>{
         //if the user{email, password} is not found
         if (theUser == null)
             return res.send({
-                operation: 'one-edu-get',
+                operation: 'one-lang-get',
                 success: false,
                 reason: 'Account doesn\'t exist',
                 solution: 'Please, create new account or login'
             });
         try {
-            const myEducations = await education.find({user_id: theUser._id});
+            const myLanguages = await language.find({user_id: theUser._id});
 
-            console.log('This user educations')
-            console.log(myEducations)
+            console.log('This user languages')
+            console.log(myLanguages)
 
             //if everything is fine
             return res.send({
-                operation: 'one-pi-get',
+                operation: 'one-lang-get',
                 success: true,
                 reason: null,
-                solution: myEducations
+                solution: myLanguages
             })
         }catch (error) {
             console.log(error)
 
-            //if unable to get edu data
+            //if unable to get lang data
             return res.send({
-                operation: 'one-edu-get',
+                operation: 'one-lang-get',
                 success: false,
                 reason: 'Unable to get the information',
                 solution: 'Retry, or contact the developer'
@@ -116,7 +116,7 @@ router.get('/one', async (req,res)=>{
         }
     }catch (e) {
         return res.send({
-            operation: 'one-educ-get',
+            operation: 'one-lang-get',
             success: false,
             reason: 'Account doesn\'t exist',
             solution: 'Please, create new account or login'
@@ -136,46 +136,43 @@ router.delete('/delete', async (req,res)=>{
     //if cookie is failed to verify
     if (cookieVerifyResult.cookieVerified == false)
         return res.send({
-            operation: 'one-edu-get',
+            operation: 'one-lang-get',
             success: false,
             reason: cookieVerifyResult.reason,
             solution: cookieVerifyResult.solution
         });
 
-    try {
-        const myEducations = await education.deleteOne(
-            {_id: new mongoose.Types.ObjectId(_id)});
+    try{
+        const myLanguage = await language.deleteOne({
+            _id: new mongoose.Types.ObjectId(_id)
+        });
 
-        console.log('This education delete result')
-        console.log(myEducations)
+        console.log('This language delete result')
+        console.log(myLanguage)
 
         //if everything is fine
         return res.send({
             operation: 'one-educ-get',
             success: true,
             reason: null,
-            solution: myEducations
+            solution: myLanguage
         })
-    }catch (error) {
+
+    }catch (e) {
         console.log(error)
 
         //if everything is fine
         return res.send({
-            operation: 'one-educ-get',
+            operation: 'one-lang-get',
             success: false,
             reason: 'Unable to get the information',
             solution: 'Retry, or contact the developer'
         })
     }
 
-
-
 })
 
-module.exports = router;
-
-
-async function createNewEdu(thisEdu) {
+async function createNewLang(thisLang) {
     let result = {
         operation: '',
         success: false,
@@ -183,35 +180,48 @@ async function createNewEdu(thisEdu) {
         solution: '',
     };
 
-
-    const edu = new education({
-        nameOfUniversity: thisEdu.nameOfUniversity,
-        titleOfDocument: thisEdu.titleOfDocument,
-        CGPA: thisEdu.CGPA,
-        yearOfGraduation: thisEdu.yearOfGraduation,
-        user_id: thisEdu.user_id
+    const levelEnum = ['Native', 'Fluent', 'Advanced', 'Beginner'];
+    let level2Add ;
+    levelEnum.forEach((value)=>{
+        if (value.toLowerCase() === thisLang.level.toLowerCase()) level2Add = value;
     });
 
-    try {
-        const saved = await edu.save();
+    const schema = new language({
+        language:thisLang.langauge,
+        level: level2Add,
+        user_id:new mongoose.Types.ObjectId(thisLang.user_id)
+    })
+
+    if (level2Add.length>1)
+    try{
+        const saved = await schema.save();
         console.log(saved);
         result = {
             operation: 'insert',
             success: true,
             reason: null,
-            solution: 'Education inserted successfully',
+            solution: 'Language inserted successfully',
         };
-
-    } catch (e) {
-            console.log(e);
-            result = {
-                operation: 'insert',
-                success: false,
-                reason: "Please re-check the information you have submitted",
-                solution: 'Unable to insert the information, retry with all fields are filled out.',
-            };
+    }catch (e) {
+        console.log(e);
+        result = {
+            operation: 'insert',
+            success: false,
+            reason: "Please re-check the information you have submitted",
+            solution: 'Unable to insert the information, retry with all fields are filled out.',
+        };
     }
-
+    else{
+        console.log("Level is not one of the predefined values/enums");
+        result = {
+            operation: 'insert',
+            success: false,
+            reason: "Please re-check the information you have submitted",
+            solution: 'Unable to insert the information, retry with all fields are filled out.',
+        };
+    }
     return result;
 }
 
+
+module.exports = router;
