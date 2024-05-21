@@ -34,6 +34,8 @@ const api_basicInformation = require('./routes/api/api_basicInformation.js');
 const api_education = require('./routes/api/api_education.js');
 const api_experience = require('./routes/api/api_experience.js');
 const api_language = require('./routes/api/api_language.js');
+const api_reference = require('./routes/api/api_reference.js');
+const api_hobby = require('./routes/api/api_hobby.js');
 
 //check the user exist for the token we have on client side
 const checkUserExist = require('./model/user/checkUserExist');
@@ -42,22 +44,22 @@ const checkUserExist = require('./model/user/checkUserExist');
 // Connect to MongoDB database
 
 //Remote free mongodb user:derejeg35, password:bReyqHBmMpMNnd9a
-mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
-    then(success => {
-        //console.log(success);
-    }).
-    catch(e => {
-        console.log('Failed to connect to MongoDB',e);
-    });
-
-//localdb = mongodb://localhost:27017/cvGenerator
-// mongoose.connect('mongodb://localhost:27017/cvGenerator')
-//     .then(success => {
+// mongoose.connect('mongodb+srv://derejeg35:bReyqHBmMpMNnd9a@cluster1.s56m4bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1').
+//     then(success => {
 //         //console.log(success);
 //     }).
 //     catch(e => {
-//         console.log('Failed to connect to MongoDB', e);
+//         console.log('Failed to connect to MongoDB',e);
 //     });
+
+//localdb = mongodb://localhost:27017/cvGenerator
+mongoose.connect('mongodb://localhost:27017/cvGenerator')
+    .then(success => {
+        //console.log(success);
+    }).
+    catch(e => {
+        console.log('Failed to connect to MongoDB', e);
+    });
 
 mongoose.connection.on('connected', async () => {
     console.log("Mongo DB connected successfully")
@@ -116,6 +118,8 @@ app.use('/api/basicInformation', api_basicInformation);
 app.use('/api/education', api_education);
 app.use('/api/experience', api_experience);
 app.use('/api/language', api_language);
+app.use('/api/reference', api_reference);
+app.use('/api/hobby', api_hobby);
 
 //homepage
 app.get("/", (req, res) => { //1. first check if the right cookie available

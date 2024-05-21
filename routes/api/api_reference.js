@@ -5,7 +5,7 @@ const router = express.Router();
 const cookieVerifier = require('./api_verifier');
 
 //user defined modules
-const education = require('../../models/education');
+const reference = require('../../models/reference');
 const user = require('../../models/user');
 const mongoose = require('mongoose');
 // const result = {
@@ -15,7 +15,8 @@ const mongoose = require('mongoose');
 //     solution: '',
 // };
 
-router.post('/new', async (req,res) =>{
+
+router.post('/new', async (req,res) => {
     const cookie = req.body.cookie;
     console.log(req.body);
 
@@ -34,7 +35,7 @@ router.post('/new', async (req,res) =>{
 
 
     //if cookie is valid and contain valid user with email and password in db
-    // we want to have the user's objectID, to insert with pi
+    // we want to have the user's objectID, to insert with reference
     const theUser = await user.findOne({email: cookieVerifyResult.theUser.email});
 
 
@@ -47,15 +48,15 @@ router.post('/new', async (req,res) =>{
             solution: 'Please, create new account or login'
         });
 
-    const thisEdu = {
-        nameOfUniversity: req.body.nameOfUniversity,
-        titleOfDocument: req.body.titleOfDocument,
-        CGPA: req.body.CGPA,
-        yearOfGraduation: req.body.yearOfGraduation,
+    const thisRef = {
+        fullname: req.body.fullname,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        role: req.body.role,
         user_id: theUser._id
     }
 
-    const createResult = await createNewEdu(thisEdu);
+    const createResult = await createNewRef(thisRef);
 
     res.send(createResult)
 });
@@ -91,17 +92,18 @@ router.get('/one', async (req,res)=>{
                 solution: 'Please, create new account or login'
             });
         try {
-            const myEducations = await education.find({user_id: theUser._id});
-
-            console.log('This user educations')
-            console.log(myEducations)
+                const myReferences = await reference.find({
+                    user_id: theUser._id
+                });
+            console.log("This user references");
+            console.log(myReferences);
 
             //if everything is fine
             return res.send({
-                operation: 'one-educ-get',
+                operation: 'one-ref-get',
                 success: true,
                 reason: null,
-                solution: myEducations
+                solution: myReferences
             })
         }catch (error) {
             console.log(error)
@@ -116,13 +118,12 @@ router.get('/one', async (req,res)=>{
         }
     }catch (e) {
         return res.send({
-            operation: 'one-educ-get',
+            operation: 'one-ref-get',
             success: false,
             reason: 'Account doesn\'t exist',
             solution: 'Please, create new account or login'
         });
     }
-
 })
 
 router.delete('/delete', async (req,res)=>{
@@ -142,22 +143,21 @@ router.delete('/delete', async (req,res)=>{
             solution: cookieVerifyResult.solution
         });
 
-    try {
-        const myEducations = await education.deleteOne(
-            {_id: new mongoose.Types.ObjectId(_id)});
-
-        console.log('This education delete result')
-        console.log(myEducations)
+    try{
+        const deletedRef = await reference.deleteOne({_id:new mongoose.Types.ObjectId(_id)});
+        console.log("Deleted ref");
+        console.log(deletedRef);
 
         //if everything is fine
         return res.send({
             operation: 'one-educ-get',
             success: true,
             reason: null,
-            solution: myEducations
+            solution: deletedRef
         })
-    }catch (error) {
-        console.log(error)
+
+    }catch (e) {
+        console.log(error);
 
         //if everything is fine
         return res.send({
@@ -168,14 +168,11 @@ router.delete('/delete', async (req,res)=>{
         })
     }
 
-
-
 })
 
 module.exports = router;
 
-
-async function createNewEdu(thisEdu) {
+async function createNewRef(thisRef){
     let result = {
         operation: '',
         success: false,
@@ -183,35 +180,31 @@ async function createNewEdu(thisEdu) {
         solution: '',
     };
 
-
-    const edu = new education({
-        nameOfUniversity: thisEdu.nameOfUniversity,
-        titleOfDocument: thisEdu.titleOfDocument,
-        CGPA: thisEdu.CGPA,
-        yearOfGraduation: thisEdu.yearOfGraduation,
-        user_id: thisEdu.user_id
+    const ref = new reference({
+        fullname: thisRef.fullname,
+        phoneNumber: thisRef.phoneNumber,
+        email: thisRef.email,
+        role: thisRef.role,
+        user_id: thisRef.user_id,
     });
 
-    try {
-        const saved = await edu.save();
+    try{
+        const saved = await ref.save();
         console.log(saved);
         result = {
             operation: 'insert',
             success: true,
             reason: null,
-            solution: 'Education inserted successfully',
+            solution: 'Reference inserted successfully',
+        }
+    }catch (e) {
+        console.log(e);
+        result = {
+            operation: 'insert',
+            success: false,
+            reason: "Please re-check the information you have submitted",
+            solution: 'Unable to insert the information, retry with all fields are filled out.',
         };
-
-    } catch (e) {
-            console.log(e);
-            result = {
-                operation: 'insert',
-                success: false,
-                reason: "Please re-check the information you have submitted",
-                solution: 'Unable to insert the information, retry with all fields are filled out.',
-            };
     }
-
     return result;
 }
-
